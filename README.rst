@@ -214,12 +214,14 @@ Or use ``replace=False`` in ``_dir``:
 
 To delete a file, use ``_delete``:
 
+.. code:: python
+
     root.data.values1_csv._delete() # delete file 'values1.csv'
     root.data._delete() # delete directory 'data'
 
 As a last warning, it it not currently possible to modify/delete a file that is
-already zipped into an archive (but that's not a big problem as zips are used
-mostly to read from or writes new files to).
+already zipped into an archive (because zips are not really made for that, it
+would be doable but would certainly be a hack).
 
 Using files writers
 ~~~~~~~~~~~~~~~~~~~~
