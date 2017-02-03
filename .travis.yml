@@ -6,4 +6,5 @@ python:
 install:
   - pip install -e .
 # command to run tests
-script: pytest
+script:
+  - python -m pytest
