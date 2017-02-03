@@ -1,3 +1,7 @@
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png
+   :alt: [logo]
+   :align: center
+
 Flametree - Zips and folders made easy
 ========================================
 
