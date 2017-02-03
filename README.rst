@@ -251,7 +251,7 @@ And here is how you would save a Matplotlib figure:
     root = files_tree(".") # or 'archive.zip' to write in an archive.
     fig, ax = plt.subplots(1)
     ax.plot([1, 2, 3], [3, 1, 2])
-    fig.savefig(root._dir("plots")_file("figure.png"), format="png")
+    fig.savefig(root._dir("plots")._file("figure.png"), format="png")
 
 
 
