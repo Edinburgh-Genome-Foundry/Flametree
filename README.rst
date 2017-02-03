@@ -5,8 +5,8 @@
 Flametree - Zips and folders made easy
 ========================================
 
-.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/flametree.svg?branch=master
-   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/flametree
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree.svg?branch=master
+   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
 Flametree is a Python library providing a very simple syntax to write, read,
