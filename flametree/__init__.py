@@ -2,6 +2,6 @@
 
 # __all__ = []
 
-from .flametree import *
-
-from .version import __version__
+from .DirectoryFilesTree import DirectoryFilesTree
+from .ZipFilesTree import ZipFilesTree, ZipFilesManager
+from .utils import files_tree
