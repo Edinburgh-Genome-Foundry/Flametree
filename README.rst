@@ -5,6 +5,10 @@
 Flametree - Zips and folders made easy
 ========================================
 
+.. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/flametree.svg?branch=master
+   :target: https://travis-ci.org/Edinburgh-Genome-Foundry/flametree
+   :alt: Travis CI build status
+
 Flametree is a Python library providing a very simple syntax to write, read,
 and explore file systems such as disk folders, zip archives, and in-memory zip
 archives and im-memory ("virtual") zip archives.
