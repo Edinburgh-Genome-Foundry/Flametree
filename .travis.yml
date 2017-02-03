@@ -2,5 +2,9 @@ language: python
 python:
   - "2.7"
   - "3.6"
+# command to install dependencies
+install:
+  - pip install -e .
+  - pip install pytest
 # command to run tests
 script: pytest
