@@ -103,7 +103,7 @@ Exploring a file tree:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Once you have created the ``root`` element with one of the methods above, you can display the whole
-file tree with `root._tree_view()`:
+file tree with ``root._tree_view()`` :
 
 .. code:: python
 
