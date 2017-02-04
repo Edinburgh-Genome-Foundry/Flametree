@@ -12,5 +12,4 @@ setup(name='flametree',
     long_description=open('README.rst').read(),
     license='see LICENSE.txt',
     keywords="",
-    packages= find_packages(exclude='docs'),
-    install_requires=["pytest"])
+    packages= find_packages(exclude='docs'))
