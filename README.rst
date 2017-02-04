@@ -127,16 +127,19 @@ The attributes of a directory like ``root`` are its files and subdirectories. Fo
 
    print (root.texts.jokes.short_story1_png.read())
 
-  or even simpler:
+or even simpler:
 
-  .. code:: python
+.. code:: python
 
-     root.texts.jokes.short_story1_png.print_content()
+    root.texts.jokes.short_story1_png.print_content()
 
 This syntactic sugar is particularly useful to explore a file tree in editors with
 auto-completion like IPython Notebooks. Notice that non-alphanumerical characters such as the
-``.`` before ``png``, are replaced by ``_`` to form a valid attribute
-name.
+``.`` before ``png``, are replaced by ``_`` to form a valid attribute name.
+
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/autocomplete.png
+   :alt: [illustration]
+   :align: center
 
 Alternatively, you can access files and directories using dictionary calls:
 
