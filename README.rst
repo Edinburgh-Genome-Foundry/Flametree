@@ -1,7 +1,7 @@
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png
    :alt: [logo]
    :align: center
-   :width: 600 px
+   :width: 600px
 
 Flametree - Python zips and folders made easy
 ==============================================
@@ -72,7 +72,7 @@ Usage
 Opening a file tree
 ~~~~~~~~~~~~~~~~~~~~
 
-Here is how you open different kind of file systems:
+Here is how you open different kinds of file systems:
 
 .. code:: python
 
