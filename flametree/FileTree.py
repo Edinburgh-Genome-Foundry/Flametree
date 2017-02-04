@@ -7,10 +7,10 @@ def sanitize_name(name):
         name = "_" + name
     return re.sub(expr, "_", name)
 
-class FilesTree:
+class FileTree:
     _is_dir = True
 
-    def __init__(self, location=".", name=None, files_manager=None,
+    def __init__(self, location=".", name=None, file_manager=None,
                  replace=False):
 
         # Initialize the properties and the files manager
@@ -21,24 +21,24 @@ class FilesTree:
             self._path = self._location
         else:
             self._path = os.path.join(self._location._path, self._name)
-        if files_manager is None:
-            files_manager = self._init_files_manager()
-        self._files_manager = files_manager
-        self._files_manager.create(self, replace=replace)
+        if file_manager is None:
+            file_manager = self._init_file_manager()
+        self._file_manager = file_manager
+        self._file_manager.create(self, replace=replace)
 
         # Automatically explore the folder and subfolders to build a tree
         self._files = []
         self._dirs = []
         if self._is_dir:
-            for filename in self._files_manager.list_files(self):
+            for filename in self._file_manager.list_files(self):
                 self._file(filename, replace=False)
-            for dirname in self._files_manager.list_dirs(self):
+            for dirname in self._file_manager.list_dirs(self):
                 self._dir(dirname, replace=False)
 
     def _dir(self, name, replace=True):
         if name not in self._dict:
-            subdir = FilesTree(location=self, name=name,
-                               files_manager=self._files_manager,
+            subdir = FileTree(location=self, name=name,
+                               file_manager=self._file_manager,
                                replace=replace)
             self._dirs.append(subdir)
             self._dict[name] = subdir
@@ -48,7 +48,7 @@ class FilesTree:
     def _file(self, name, replace=True):
         if name not in self._dict:
             f = File(location=self, name=name,
-                     files_manager=self._files_manager,
+                     file_manager=self._file_manager,
                      replace=replace)
             self._files.append(f)
             self._dict[f._name] = f
@@ -58,7 +58,7 @@ class FilesTree:
     def _delete(self):
         if isinstance(self._location, str):
             raise IOError("Looks like you are trying to delete the root.")
-        self._files_manager.delete(self)
+        self._file_manager.delete(self)
         location = self._location
         location._dict.pop(self._name)
         location.__dict__.pop(self._name, None)
@@ -101,13 +101,13 @@ class FilesTree:
         return self
 
 
-class File(FilesTree):
+class File(FileTree):
     _is_dir = False
 
     def read(self, mode="r"):
-        return self._files_manager.read(self, mode=mode)
+        return self._file_manager.read(self, mode=mode)
 
     def write(self, content, mode="a"):
         if hasattr(content, "decode"):
             mode += "b"
-        self._files_manager.write(self, content, mode=mode)
+        self._file_manager.write(self, content, mode=mode)

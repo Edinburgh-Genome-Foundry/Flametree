@@ -1,6 +1,6 @@
-from .ZipFilesTree import ZipFilesTree, ZipFilesManager
-from .DirectoryFilesTree import DirectoryFilesTree
-def files_tree(target, replace=False):
+from .ZipFileTree import ZipFileTree, ZipFileManager
+from .DirectoryFileTree import DirectoryFileTree
+def file_tree(target, replace=False):
     """
     Parameters
     ----------
@@ -14,16 +14,16 @@ def files_tree(target, replace=False):
       will be written inside the target and some files may be overwritten.
     """
     if not isinstance(target, str):
-        return ZipFilesTree(files_manager=ZipFilesManager(source=target))
+        return ZipFileTree(file_manager=ZipFileManager(source=target))
     elif target == '@memory':
-        return ZipFilesTree("@memory")
+        return ZipFileTree("@memory")
     elif target.lower().endswith(".zip"):
-        return ZipFilesTree(target)
+        return ZipFileTree(target)
     else:
         try:
-            return DirectoryFilesTree(target)
+            return DirectoryFileTree(target)
         except:
             pass
 
     # Last chance, lets try again:
-    return ZipFilesTree(files_manager=ZipFilesManager(source=target))
+    return ZipFileTree(file_manager=ZipFileManager(source=target))

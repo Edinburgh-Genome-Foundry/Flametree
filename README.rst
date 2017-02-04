@@ -2,35 +2,33 @@
    :alt: [logo]
    :align: center
 
-Flametree - Zips and folders made easy
-========================================
+Flametree - Python zips and folders made easy
+==============================================
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library providing a very simple syntax to write, read,
-and explore file systems such as disk folders, zip archives, and in-memory zip
-archives and im-memory ("virtual") zip archives.
+Flametree is a Python to read and files in different file systems such as
+folders, zip archives, or in-memory ("virtual") archives.
 
-For example, in the following snippet, we first read and print the content of
-file ``my_folder/texts/text1.txt``, then we create a new file
-``my_folder/texts/text2.txt`` with some content:
+In the following example, we print the content of file ``my_folder/texts/text1.txt``,
+then we write some content in a new file ``my_folder/texts/new_file.txt``:
 
 .. code:: python
 
      from flametree import file_tree
      with file_tree("my_folder") as root:
          print (root.texts.text1_txt.read())
-         root.texts._file("new_text.txt").write("I am the file's content.")
+         root.texts._file("new_file.txt").write("I am the file's content.")
 
-Now with the same syntax we can do the same inside a zip archive:
+The same code also works on a zip archive in:
 
 .. code:: python
 
      with file_tree("my_archive.zip") as root:
          print (root.texts.text1_txt.read())
-         root.texts._file("new_text.txt").write("I am the file's content.")
+         root.texts._file("new_file.txt").write("I am the file's content.")
 
 And here is how you would create a zip archive *in memory*, populate it with two
 files in different subdirectories, and obtain the archive's binary data,
@@ -39,8 +37,8 @@ e.g. for sending it to some distant client. Again, same syntax:
 .. code:: python
 
      with file_tree("@memory") as root:
-         root._dir("new_dir")._file("new_file.txt").write("Some content")
-         root._dir("other_dir")._file("other_file.txt").write("Other content")
+         root._dir("folder1")._file("report1.txt").write("Some content")
+         root._dir("folder2")._file("report2.txt").write("Other content")
          data = root._close()
 
 See below for more examples and features.
@@ -75,43 +73,43 @@ For opening a connection to a directory on the disk:
 
 .. code:: python
 
-     from flametree import DirectoryFilesTree
-     root = DirectoryFilesTree(path_to_some_directory)
+     from flametree import DirectoryFileTree
+     root = DirectoryFileTree(path_to_some_directory)
 
 If the directory does not exist, it will be created. If it exists it is
-possible to automatically empty by adding ``replace=True`` to the command.
+possible to automatically empty with the option ``replace=True``.
 
 For opening a connection to a zip archive:
 
 .. code:: python
 
-     from flametree import ZipFilesTree
-     root = ZipFilesTree("my_zip_file.zip")
+     from flametree import ZipFileTree
+     root = ZipFileTree("my_zip_file.zip")
 
 Here too the archive will be created if it doesn't exist, and it will be emptied
-by adding  ``replace=True`` to ``ZipFilesTree``.
+by adding  ``replace=True`` to ``ZipFileTree``.
 
 For opening a connection to a Zip archive in memory, represented as a variable
 ``data``, either a file-like object, or a string or bytes:
 
 .. code:: python
 
-     from flametree import ZipFilesTree, ZipFilesManager
-     root = ZipFilesTree(files_manager=ZipFilesManager(source=data))
+     from flametree import ZipFileTree, ZipFileManager
+     root = ZipFileTree(file_manager=ZipFileManager(source=data))
 
 Finally for creating a memory zip archive from scratch
 
 .. code:: python
 
-     root = ZipFilesTree("@memory")
+     root = ZipFileTree("@memory")
 
-To make things simpler Flametree provides the ``files_tree`` method which will
+To make things simpler Flametree provides the ``file_tree`` method which will
 automatically create the right tree class by analyzing the provided target:
 
 .. code:: python
 
     # target can be 'my_folder', 'archive.zip', '@memory', some_binary_data
-    root = files_tree(target)
+    root = file_tree(target)
 
 This is particularly useful when for programs that can accept multi-file data either as
 zip or directories, or must produce multi-file results in either zip or folder format.
@@ -120,7 +118,7 @@ Exploring a file tree:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Once you have created the ``root`` element with one of the methods above, you can display the whole
-file system with `root._tree_view()`:
+file tree with `root._tree_view()`:
 
 .. code:: python
 
@@ -136,42 +134,40 @@ file system with `root._tree_view()`:
       figure2.png
     Readme.md
 
-This whole tree is also contained in ``root`` as a series of nested objects, so for instance to
-reach file ``short_story1.txt``, you would write ``root.texts.jokes.short_story1_png``.
-And here is how you print the content of that file:
+The attributes of a directory like ``root`` are its files and subdirectories. For instance to access
+ ``short_story1.txt`` and read its content, you would write:
 
 .. code:: python
 
    print (root.texts.jokes.short_story1_png.read())
 
+This syntactic sugar is particularly useful to explore a file tree in editors with autocompletion,
+like IPython Notebooks. Notice that non-alphanumerical caracters such as the
+``.`` before ``png``, are replaced by ``_`` to form a valid attribute
+name.
 
-Notice that non-alphanumerical caracters such as ``.`` are replaced by ``_`` to give a valid attribute
-name. This feature is particularly useful to explore a file tree when using an editor with autocompletion,
-e.g. an IPython Notebook, but may not work with all use cases. Alternatively, you can access the file using
-dictionnary calls:
+Alternatively, you can access files and directories using dictionnary calls:
 
 .. code:: python
 
     root["texts"]["jokes"]["short_story.png"]
 
-You can iterate through the subdirectories of a directory using the ``_dirs`` attribute, for instance:
+To iterate through the subdirectories of a directory, use the ``_dirs`` attribute:
 
 .. code:: python
 
-    for subdir in root._dirs:
-        print (dir._name) # Will print 'texts', 'figures'
+    for subdirectory in root._dirs:
+        print (subdirectory._name) # Will print 'texts', 'figures'
 
-You can iterate through the files of a directory using the ``_files`` attribute, for instance:
-
+To iterate through the files of a directory, use the ``_files`` attribute:
 
 .. code:: python
 
     for f in root.figures._files:
         print (f._name) # Will print 'figure1.png', 'figure1.png'
 
-Finally ``_all_files`` gives you access to all files in all directories and
-subdirectories. For instance here is how you display the content of all text files
-under the root folder:
+Finally, use ``_all_files`` to iterate through all files in all directories and
+subdirectories. The snippet below prints the content of all ``.txt`` files in the file tree:
 
 .. code:: python
 
@@ -182,17 +178,32 @@ under the root folder:
 Writing in a file tree:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-To create a new subdirectory use the ``._dir('dir_name')`` command.
-To create a new file, use the ``._file('file_name')`` command.
-To write in a file, use the ``.write(content)`` command.
-These commands can be chained, so for instance if you want to write a file ``data/day_1/values.csv``
-you will use:
+To create a new subdirectory use ``_dir``:
+
+.. code:: python
+
+    root._dir("data") # create a 'data' folder at the root.
+
+To create a new file use ``_file``:
+
+.. code:: python
+
+    root._file("poem.txt") # create a 'poem.txt' file at the root.
+
+To write content in a file, use ``.write``:
+
+.. code:: python
+
+    root.poem_txt.write("Two roads diverged in a yellow wood.")
+
+These commands can be chained. Let us create folders ``data`` and ``day1``, and
+write file ``data/day1/values.csv``, all in a single line:
 
 .. code:: python
 
     root._dir("data")._dir("day_1")._file("values.csv").write("1, 15, 25, 14")
 
-Keep in mind that ``._dir`` and ``._file`` **overwrite by default**, which means
+Keep in mind that ``._dir`` and ``._file`` **overwrite their target by default**, which means
 that if you write:
 
 .. code:: python
@@ -237,8 +248,8 @@ how to use Weasyprint to create a PDF ``pdfs/report.pdf``
 .. code:: python
 
     import weasyprint
-    from flametree import files_tree
-    root = files_tree(".") # or 'archive.zip' to write in an archive.
+    from flametree import file_tree
+    root = file_tree(".") # or 'archive.zip' to write in an archive.
     html = weasyprint.HTML(string="<b>Hello</b> world!", base_url='.')
     html.write_pdf(root._dir("pdfs")._file("test.pdf"))
 
@@ -247,12 +258,13 @@ And here is how you would save a Matplotlib figure:
 .. code:: python
 
     import matplotlib.pyplot as plt
-    from flametree import files_tree
-    root = files_tree(".") # or 'archive.zip' to write in an archive.
+    from flametree import file_tree
+    root = file_tree(".") # or 'archive.zip' to write in an archive.
     fig, ax = plt.subplots(1)
     ax.plot([1, 2, 3], [3, 1, 2])
     fig.savefig(root._dir("plots")._file("figure.png"), format="png")
 
+That's all folks !
 
 
 

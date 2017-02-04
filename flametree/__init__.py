@@ -2,6 +2,6 @@
 
 # __all__ = []
 
-from .DirectoryFilesTree import DirectoryFilesTree
-from .ZipFilesTree import ZipFilesTree, ZipFilesManager
-from .utils import files_tree
+from .DirectoryFileTree import DirectoryFileTree
+from .ZipFileTree import ZipFileTree, ZipFileManager
+from .utils import file_tree

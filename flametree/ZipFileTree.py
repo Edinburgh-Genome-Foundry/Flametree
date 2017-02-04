@@ -2,7 +2,7 @@ import os
 import sys
 import zipfile
 from collections import defaultdict
-from .FilesTree import FilesTree
+from .FileTree import FileTree
 import re
 
 PYTHON3 = (sys.version_info[0] == 3)
@@ -16,7 +16,7 @@ else:
 
 
 
-class ZipFilesManager:
+class ZipFileManager:
 
     def __init__(self, path=None, source=None):
         if source is None:
@@ -139,15 +139,15 @@ class ZipFilesManager:
             return self.source.getvalue()
 
 
-class ZipFilesTree(FilesTree):
+class ZipFileTree(FileTree):
     """
-    >>> ZipFilesTree("some_archive.zip")
+    >>> ZipFileTree("some_archive.zip")
     >>> # Data is either a sting/bytes, or a file-like object.
-    >>> ZipFilesTree(files_manager=ZipFilesManager(source=some_data))
+    >>> ZipFileTree(file_manager=ZipFileManager(source=some_data))
     """
 
-    def _init_files_manager(self):
-        return ZipFilesManager(self._path)
+    def _init_file_manager(self):
+        return ZipFileManager(self._path)
 
     def _close(self):
-        return self._files_manager.close()
+        return self._file_manager.close()

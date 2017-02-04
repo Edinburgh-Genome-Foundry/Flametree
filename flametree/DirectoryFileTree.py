@@ -1,9 +1,9 @@
 import os
 import shutil
-from .FilesTree import FilesTree
+from .FileTree import FileTree
 
 
-class DirectoryFilesManager:
+class DirectoryFileManager:
 
     @staticmethod
     def list_files(directory):
@@ -53,7 +53,7 @@ class DirectoryFilesManager:
     def join_paths(*paths):
         return os.path.join(*paths)
 
-class DirectoryFilesTree(FilesTree):
+class DirectoryFileTree(FileTree):
 
-    def _init_files_manager(self):
-        return DirectoryFilesManager()
+    def _init_file_manager(self):
+        return DirectoryFileManager()
