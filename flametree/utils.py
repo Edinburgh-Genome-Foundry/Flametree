@@ -1,7 +1,11 @@
-from .ZipFileTree import ZipFileTree, ZipFileManager
-from .DirectoryFileTree import DirectoryFileTree
+from .ZipFileManager import ZipFileManager
+from .DiskFileManager import DiskFileManager
+from .Directory import Directory
+
 def file_tree(target, replace=False):
-    """
+    """Open a connection to a file tree which can be either a disk folder, a
+    zip archive, or an in-memory zip archive.
+
     Parameters
     ----------
 
@@ -14,16 +18,18 @@ def file_tree(target, replace=False):
       will be written inside the target and some files may be overwritten.
     """
     if not isinstance(target, str):
-        return ZipFileTree(file_manager=ZipFileManager(source=target))
+        return Directory(file_manager=ZipFileManager(source=target))
     elif target == '@memory':
-        return ZipFileTree("@memory")
+        return Directory("@memory", file_manager=ZipFileManager("@memory"))
     elif target.lower().endswith(".zip"):
-        return ZipFileTree(target)
+        return Directory(target, file_manager=ZipFileManager(target),
+                         replace=replace)
     else:
         try:
-            return DirectoryFileTree(target)
+            return Directory(target, file_manager=DiskFileManager(),
+                             replace=replace)
         except:
             pass
 
-    # Last chance, lets try again:
-    return ZipFileTree(file_manager=ZipFileManager(source=target))
+    # Last chance, lets try again if it's some kind of zip data:
+    return Directory(file_manager=ZipFileManager(source=target))

@@ -1,9 +1,8 @@
 import os
 import shutil
-from .FileTree import FileTree
 
 
-class DirectoryFileManager:
+class DiskFileManager:
 
     @staticmethod
     def list_files(directory):
@@ -32,18 +31,18 @@ class DirectoryFileManager:
             f.write(content)
 
     @staticmethod
-    def delete(directory):
-        if directory._is_dir:
-            shutil.rmtree(directory._path)
+    def delete(target):
+        if target._is_dir:
+            shutil.rmtree(target._path)
         else:
-            os.remove(directory._path)
+            os.remove(target._path)
 
-    def create(self, directory, replace=True):
-        path = directory._path
+    def create(self, target, replace=True):
+        path = target._path
         if replace and os.path.exists(path):
-            self.delete(directory)
+            self.delete(target)
         if replace or (not os.path.exists(path)):
-            if directory._is_dir:
+            if target._is_dir:
                 os.mkdir(path)
             else:
                 with open(path, "w") as f:
@@ -53,7 +52,5 @@ class DirectoryFileManager:
     def join_paths(*paths):
         return os.path.join(*paths)
 
-class DirectoryFileTree(FileTree):
-
-    def _init_file_manager(self):
-        return DirectoryFileManager()
+    def close():
+        pass
