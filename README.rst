@@ -300,8 +300,8 @@ And here is how you would save a Matplotlib figure in a zip archive:
     from flametree import file_tree
     fig, ax = plt.subplots(1)
     ax.plot([1, 2, 3], [3, 1, 2])
-    root = file_tree("archive.zip")
-    fig.savefig(root._dir("plots")._file("figure.png"), format="png")
+    with file_tree("archive.zip") as root:
+        fig.savefig(root._dir("plots")._file("figure.png"), format="png")
 
 That's all folks !
 
