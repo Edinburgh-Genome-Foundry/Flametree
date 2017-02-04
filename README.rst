@@ -22,7 +22,7 @@ then we write some content in a new file ``my_folder/texts/new_file.txt``:
          print (root.texts.text1_txt.read())
          root.texts._file("new_file.txt").write("I am the file's content.")
 
-The same code also works on a zip archive in:
+The same code also works on a zip archive:
 
 .. code:: python
 
@@ -30,7 +30,7 @@ The same code also works on a zip archive in:
          print (root.texts.text1_txt.read())
          root.texts._file("new_file.txt").write("I am the file's content.")
 
-And here is how you would create a zip archive *in memory*, populate it with two
+And here is how you create a virtual zip archive in memory, populate it with two
 files in different subdirectories, and obtain the archive's binary data,
 e.g. for sending it to some distant client. Again, same syntax:
 
@@ -265,7 +265,6 @@ And here is how you would save a Matplotlib figure:
     fig.savefig(root._dir("plots")._file("figure.png"), format="png")
 
 That's all folks !
-
 
 
 .. _Zulko: https://github.com/Zulko/
