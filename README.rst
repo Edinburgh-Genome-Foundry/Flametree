@@ -105,7 +105,7 @@ Exploring a file tree:
 Once you have created the ``root`` element with one of the methods above, you can display the whole
 file tree with ``root._tree_view()`` :
 
-.. code:: python
+.. code::
 
     >>> print (root._tree_view())
     texts/
@@ -118,6 +118,7 @@ file tree with ``root._tree_view()`` :
       figure1.png
       figure2.png
     Readme.md
+
 
 The attributes of a directory like ``root`` are its files and subdirectories. For instance to access
  ``short_story1.txt`` and read its content, you would write:
