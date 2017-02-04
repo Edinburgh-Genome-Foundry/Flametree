@@ -37,7 +37,7 @@ e.g. for sending it to some distant client. Again, similar syntax:
 
 .. code:: python
 
-     root = file_tree("@memory") as root:
+     root = file_tree("@memory")
      root._dir("folder1")._file("report1.txt").write("Some content")
      root._dir("folder2")._file("report2.txt").write("Other content")
      data = root._close()
