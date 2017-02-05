@@ -9,7 +9,7 @@ Flametree - Python zips and folders made easy
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python to read and files in different file systems such as
+Flametree is a Python library to read and files in different file systems such as
 folders, zip archives, or in-memory ("virtual") archives.
 
 In the following example, we print the content of file ``my_folder/texts/text1.txt``,
