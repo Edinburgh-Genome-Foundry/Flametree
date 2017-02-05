@@ -10,11 +10,11 @@ Flametree - Python file operations made easy
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library to simplify file operations in file systems such as
-on-disk directories, zip archives, or in-memory ("virtual") archives.
+Flametree is a Python library to simplify file operations on disk file systems, as
+well as zip archives and in-memory "virtual" zip files.
 
-Here is how to use Flametree to read file ``texts/poems/the_raven.txt``, replace all
-occurences of "raven" by "seagull" in the text, and write the result to a new
+Here is how to use Flametree to read a file ``texts/poems/the_raven.txt``, replace all
+occurences of the word "raven" by "seagull" in the text, and write the result to a new
 file ``the_seagull.txt`` in the same folder:
 
 .. code:: python
