@@ -1,9 +1,8 @@
 import os
 import sys
 import zipfile
-from collections import defaultdict
-from .FileTree import FileTree
 import re
+from collections import defaultdict
 
 PYTHON3 = (sys.version_info[0] == 3)
 
@@ -28,28 +27,23 @@ class ZipFileManager:
             source = StringBytesIO(source)
         self.source = source
         self.path = "." if path is None else path
-
-        print ("asdsadasd", source)
-        #print ("ddd", os.path.exists(source))
         if path == "@memory":
             # Horrible hack: we give an empty but valid zip to the reader:
             reader_source = StringBytesIO(b'PK\x05\x06' + 18 * b'\x00')
             self.reader = zipfile.ZipFile(reader_source, "r")
 
         elif isinstance(source, str) and not os.path.exists(source):
-            print ("IM here")
             reader_source = StringBytesIO(b'PK\x05\x06' + 18 * b'\x00')
             self.reader = zipfile.ZipFile(reader_source, "r")
         else:
-            print ("Im there")
             self.reader = zipfile.ZipFile(source, "r")
         self.files_data = defaultdict(lambda *a: StringBytesIO())
         self.writer = zipfile.ZipFile(source, "a",
                                       compression=zipfile.ZIP_DEFLATED)
 
-    def relative_path(self, directory):
-        path = directory._path[len(self.path)+1:]
-        if directory._is_dir and path != "":
+    def relative_path(self, target):
+        path = target._path[len(self.path)+1:]
+        if target._is_dir and path != "":
             path += "/"
         return path
 
@@ -99,7 +93,7 @@ class ZipFileManager:
                 "It may actually not even be possible, or in an inelegant way."
             )
         if mode in ("w", "wb"): # i.e. not append
-            self.files_data.pop(path) # overwrite !
+            self.files_data.pop(path, None) # overwrite if exists!
         if not isinstance(content, bytes):
             content = content.encode("utf-8")
         self.files_data[path].write(content)
@@ -120,10 +114,6 @@ class ZipFileManager:
 
 
     def path_exists_in_file(self, directory):
-        print (self.reader)
-        print (self.reader.namelist())
-        print (self.relative_path(directory))
-
         return self.relative_path(directory) in self.reader.namelist()
 
 
@@ -137,17 +127,3 @@ class ZipFileManager:
         self.writer.close()
         if hasattr(self.source, "getvalue"):
             return self.source.getvalue()
-
-
-class ZipFileTree(FileTree):
-    """
-    >>> ZipFileTree("some_archive.zip")
-    >>> # Data is either a sting/bytes, or a file-like object.
-    >>> ZipFileTree(file_manager=ZipFileManager(source=some_data))
-    """
-
-    def _init_file_manager(self):
-        return ZipFileManager(self._path)
-
-    def _close(self):
-        return self._file_manager.close()
