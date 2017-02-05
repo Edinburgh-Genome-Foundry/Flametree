@@ -3,21 +3,24 @@
    :align: center
    :width: 600px
 
-Flametree - Python zips and folders made easy
+Flametree - Python file operations made easy
 ==============================================
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library to simplify file reading and writing in different file systems such as
+Flametree is a Python library to simplify file operations in file systems such as
 on-disk directories, zip archives, or in-memory ("virtual") archives.
 
-For instance, let us read file ``texts/poems/the_raven.txt``, replace all occurences of "raven" by "seagull" in the text, and write the result to a new file ``the_seagull.txt`` in the same folder:
+Here is how to use Flametree to read file ``texts/poems/the_raven.txt``, replace all
+occurences of "raven" by "seagull" in the text, and write the result to a new
+file ``the_seagull.txt`` in the same folder:
 
 .. code:: python
 
      from flametree import file_tree
+
      with file_tree("texts") as root:
          poem_text = root.poems.the_raven_txt.read()
          new_text = poem_text.replace("raven", "seagull")
@@ -39,7 +42,7 @@ Again with similar syntax, here is how you create a virtual zip archive in memor
      root = file_tree("@memory")
      root._dir("poems")._file("haiku.txt").write("Hello, world !")
      root._dir("reports")._file("sales.csv").write("Day 1, 2 match boxes")
-     data = root._close()
+     zip_data = root._close()
 
 See section *Usage* below for more examples and features.
 
@@ -195,7 +198,7 @@ To write content in a file, use ``.write``:
 
     root.joke_txt.write("A plateau is the highest form of flattery.")
 
-Writing to a file will append use mode ``a`` (append) by default. To overwrite
+Writing to a file will use mode ``a`` (append) by default. To overwrite
 the file set the write mode to ``"w"``. Let's erase and rewrite that ``joke.txt``:
 
 .. code:: python
