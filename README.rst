@@ -13,10 +13,7 @@ Flametree - Python zips and folders made easy
 Flametree is a Python library to simplify file reading and writing in different file systems such as
 on-disk directories, zip archives, or in-memory ("virtual") archives.
 
-For instance, suppose that we have a folder ``texts/poems/`` on disk. Let us
-read file ``the_raven.txt`` in this folder, replace all occurences
-of "raven" by "seagull" in the text, then write the result to a new file
-``the_seagull.txt`` in the same folder:
+For instance, let us read file ``texts/poems/the_raven.txt``, replace all occurences of "raven" by "seagull" in the text, and write the result to a new file ``the_seagull.txt`` in the same folder:
 
 .. code:: python
 
@@ -26,7 +23,7 @@ of "raven" by "seagull" in the text, then write the result to a new file
          new_text = poem_text.replace("raven", "seagull")
          root.poems._file("the_seagull.txt").write(better_text)
 
-The same code also works on a zip archive:
+The same code also works for files inside a zip archive:
 
 .. code:: python
 
@@ -35,9 +32,7 @@ The same code also works on a zip archive:
          new_text = poem_text.replace("raven", "seagull")
          root.poems._file("the_seagull.txt").write(better_text)
 
-And here is how you create a virtual zip archive in memory, populate it with
-files ``poems/haiku.txt``, and ``reports/sales.csv`` and obtain the archive's binary data,
-e.g. for sending it to some distant client. Again, similar syntax:
+Again with similar syntax, here is how you create a virtual zip archive in memory, populate it with two files ``poems/haiku.txt``, and ``reports/sales.csv`` and get the archive's binary data back, e.g. for sending it to some distant client:
 
 .. code:: python
 
@@ -208,15 +203,14 @@ the file set the write mode to ``"w"``. Let's erase and rewrite that ``joke.txt`
     root.joke_txt.write("'DNA' stands for National Dyslexic Association.", "w")
 
 File and directory creation commands can be chained.
-Let us create some new folders ``data`` and ``test_1``, and
-write content to a new file ``data/test_1/values.csv``, all in a single line:
+Let us create some new folders ``data/`` and ``data/test_1/``, and
+write to file ``data/test_1/values.csv``, all in a single line:
 
 .. code:: python
 
     root._dir("data")._dir("test_1")._file("values.csv").write("1, 15, 25")
 
-Keep in mind that ``._dir`` and ``._file`` **overwrite their target by default**, which means
-that if you write:
+Beware that ``._dir`` and ``._file`` **overwrite their target by default**, which means that if you write:
 
 .. code:: python
 
