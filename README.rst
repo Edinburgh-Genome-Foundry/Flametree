@@ -21,7 +21,7 @@ For instance, let us read file ``texts/poems/the_raven.txt``, replace all occure
      with file_tree("texts") as root:
          poem_text = root.poems.the_raven_txt.read()
          new_text = poem_text.replace("raven", "seagull")
-         root.poems._file("the_seagull.txt").write(better_text)
+         root.poems._file("the_seagull.txt").write(new_text)
 
 The same code also works for files inside a zip archive:
 
@@ -30,7 +30,7 @@ The same code also works for files inside a zip archive:
      with file_tree("my_archive.zip") as root:
          poem_text = root.poems.the_raven_txt.read()
          new_text = poem_text.replace("raven", "seagull")
-         root.poems._file("the_seagull.txt").write(better_text)
+         root.poems._file("the_seagull.txt").write(new_text)
 
 Again with similar syntax, here is how you create a virtual zip archive in memory, populate it with two files ``poems/haiku.txt``, and ``reports/sales.csv`` and get the archive's binary data back, e.g. for sending it to some distant client:
 
