@@ -10,39 +10,43 @@ Flametree - Python zips and folders made easy
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library to read and files in different file systems such as
-folders, zip archives, or in-memory ("virtual") archives.
+Flametree is a Python library to simplify file reading and writing in different file systems such as
+on-disk directories, zip archives, or in-memory ("virtual") archives.
 
-In the following example, we print the content of file ``my_folder/texts/text1.txt``,
-then we write some content in a new file ``my_folder/texts/new_file.txt``:
+For instance, suppose that we have a folder ``texts/poems/`` on disk. Let us
+read file ``the_raven.txt`` in this folder, replace all occurences
+of "raven" by "seagull" in the text, then write the result to a new file
+``the_seagull.txt`` in the same folder:
 
 .. code:: python
 
      from flametree import file_tree
-     with file_tree("my_folder") as root:
-         print (root.texts.text1_txt.read())
-         root.texts._file("new_file.txt").write("I am the file's content.")
+     with file_tree("texts") as root:
+         poem_text = root.poems.the_raven_txt.read()
+         new_text = poem_text.replace("raven", "seagull")
+         root.poems._file("the_seagull.txt").write(better_text)
 
 The same code also works on a zip archive:
 
 .. code:: python
 
      with file_tree("my_archive.zip") as root:
-         print (root.texts.text1_txt.read())
-         root.texts._file("new_file.txt").write("I am the file's content.")
+         poem_text = root.poems.the_raven_txt.read()
+         new_text = poem_text.replace("raven", "seagull")
+         root.poems._file("the_seagull.txt").write(better_text)
 
-And here is how you create a virtual zip archive in memory, populate it with two
-files in different subdirectories, and obtain the archive's binary data,
+And here is how you create a virtual zip archive in memory, populate it with
+files ``poems/haiku.txt``, and ``reports/sales.csv`` and obtain the archive's binary data,
 e.g. for sending it to some distant client. Again, similar syntax:
 
 .. code:: python
 
      root = file_tree("@memory")
-     root._dir("folder1")._file("report1.txt").write("Some content")
-     root._dir("folder2")._file("report2.txt").write("Other content")
+     root._dir("poems")._file("haiku.txt").write("Hello, world !")
+     root._dir("reports")._file("sales.csv").write("Day 1, 2 match boxes")
      data = root._close()
 
-See below for more examples and features.
+See section *Usage* below for more examples and features.
 
 Installation
 -------------
@@ -109,10 +113,10 @@ file tree with ``root._tree_view()`` :
 
     >>> print (root._tree_view())
     texts/
-      jokes/
-        short_story1.txt
-        short_story2.txt
-        short_story3.txt
+      poems/
+        dover_beach.txt
+        the_raven.txt
+        the_tyger.txt
       todo_list.txt
     figures/
       figure1.png
@@ -120,22 +124,25 @@ file tree with ``root._tree_view()`` :
     Readme.md
 
 
-The attributes of a directory like ``root`` are its files and subdirectories. For instance to access
- ``short_story1.txt`` and read its content, you would write:
+The attributes of a directory like ``root`` are its files and subdirectories.
+For instance to print the content of ``dover_beach.txt`` you would write:
 
 .. code:: python
 
-   print (root.texts.jokes.short_story1_png.read())
+  print( root.texts.poems.dover_beach_txt.read() )
 
 or even simpler:
 
 .. code:: python
 
-    root.texts.jokes.short_story1_png.print_content()
+    root.texts.poems.dover_beach_txt.print_content()
 
-This syntactic sugar is particularly useful to explore a file tree in editors with
-auto-completion like IPython Notebooks. Notice that non-alphanumerical characters such as the
-``.`` before ``png``, are replaced by ``_`` to form a valid attribute name.
+Notice that the ``.`` before ``txt``, are replaced by ``_`` so that the file name
+can be used as an attribute.
+
+This syntactic sugar is particularly useful to explore a file tree in
+IPython Notebooks or other editors offering auto-completion:
+
 
 .. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/autocomplete.png
    :alt: [illustration]
@@ -145,24 +152,24 @@ Alternatively, you can access files and directories using dictionary calls:
 
 .. code:: python
 
-    root["texts"]["jokes"]["short_story.png"]
+    root["texts"]["poems"]["dover_beach.txt"]
 
 To iterate through the subdirectories of a directory, use the ``_dirs`` attribute:
 
 .. code:: python
 
     for subdirectory in root._dirs:
-        print (subdirectory._name) # Will print 'texts', 'figures'
+        print (subdirectory._name) # Will print 'texts' and 'figures'
 
 To iterate through the files of a directory, use the ``_files`` attribute:
 
 .. code:: python
 
     for f in root.figures._files:
-        print (f._name) # Will print 'figure1.png', 'figure1.png'
+        print (f._name) # Will print 'figure1.png' and 'figure2.png'
 
-Finally, use ``_all_files`` to iterate through all files in all directories and
-subdirectories. The snippet below prints the content of all ``.txt`` files in the file tree:
+Finally, use ``_all_files`` to iterate through all files nested in a directory.
+The snippet below prints the content of all ``.txt`` files in the file tree:
 
 .. code:: python
 
@@ -177,58 +184,60 @@ To create a new subdirectory use ``_dir``:
 
 .. code:: python
 
-    root._dir("data") # create a 'data' folder at the root.
+    root._dir("data") # create a 'data' folder at the root
+    root.data._dir("reports") # create a 'reports' folder under `root/data`
 
 To create a new file use ``_file``:
 
 .. code:: python
 
-    root._file("poem.txt") # create a 'poem.txt' file at the root.
+    root._file("joke.txt") # create a 'joke.txt' file at the root.
+    root.texts._file("hello.txt") # create 'hello.txt' in `root/texts`.
 
 To write content in a file, use ``.write``:
 
 .. code:: python
 
-    root.poem_txt.write("Two roads diverged in a yellow wood.")
+    root.joke_txt.write("A plateau is the highest form of flattery.")
 
 Writing to a file will append use mode ``a`` (append) by default. To overwrite
-the file set the write mode to ``"w"``:
+the file set the write mode to ``"w"``. Let's erase and rewrite that ``joke.txt``:
 
 .. code:: python
 
-    root.poem_txt.write("O Captain! My Captain!", mode="w")
+    root.joke_txt.write("'DNA' stands for National Dyslexic Association.", "w")
 
 File and directory creation commands can be chained.
-Let us create folders ``data`` and ``day1``, and
-write file ``data/day1/values.csv``, all in a single line:
+Let us create some new folders ``data`` and ``test_1``, and
+write content to a new file ``data/test_1/values.csv``, all in a single line:
 
 .. code:: python
 
-    root._dir("data")._dir("day_1")._file("values.csv").write("1, 15, 25, 14")
+    root._dir("data")._dir("test_1")._file("values.csv").write("1, 15, 25")
 
 Keep in mind that ``._dir`` and ``._file`` **overwrite their target by default**, which means
 that if you write:
 
 .. code:: python
 
-    root._dir("data")._file("values1.csv").write("1, 15, 25, 14")
-    root._dir("data")._file("values2.csv").write("1, 15, 25, 14")
+    root._dir("data")._file("values_1.csv").write("1, 4, 7")
+    root._dir("data")._file("values_2.csv").write("2, 9, 7")
 
-The directory ``data`` will only contain ``values2.csv``, because the second
+The directory ``data`` will only contain ``values_2.csv``, because the second
 line's ``_dir("data")`` erases the ``data`` directory and starts a new one. To avoid this,
-either write:
+either use ``root.data`` in the second line:
 
 .. code:: python
 
-    root._dir("data")._file("values1.csv").write("1, 15, 25, 14")
-    root.data._file("values2.csv").write("1, 15, 25, 14")
+    root._dir("data")._file("values_1.csv").write("1, 4, 7")
+    root.data._file("values_2.csv").write("2, 9, 7")
 
 Or use ``replace=False`` in ``_dir``:
 
 .. code:: python
 
-    root._dir("data")._file("values1.csv").write("1, 15, 25, 14")
-    root._dir("data", replace=False)._file("values2.csv").write("1, 15, 25, 14")
+    root._dir("data")._file("values_1.csv").write("1, 4, 7")
+    root.data._file("values_2.csv", replace=False).write("2, 9, 7")
 
 
 Other operations
@@ -250,9 +259,9 @@ You can move, copy, and delete a file with ``.move(folder)``, ``.copy(folder)``,
 Special rules for ZIP archives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It it not currently possible to
-modify/delete a file that is already zipped into an archive (because zips are
-not really made for that, it would be doable but would certainly be a hack).
+It it not currently possible to modify/delete a file that is already zipped
+into an archive (because zips are not really made for that, it would
+be doable but would certainly be a hack).
 
 When creating files and folders in a zip with Flametree, the changes in the actual zip
 will only be performed by closing the ``root`` with ``root._close()``
@@ -264,15 +273,16 @@ Here are a few examples:
 .. code:: python
 
     root = file_tree("archive.zip")
-    root._file("new_file.txt").write("Hi there !")
+    root._file("hello.txt").write("Hi there !")
     root._close()
 
-    # Similar to the previous, using `with`:
+    # Equivalent to the previous, using `with`:
     with file_tree("archive.zip") as root:
-        root._file("new_file.txt").write("Hi there !")
+        root._file("hello.txt").write("Hi there !")
 
+    # Getting binary data of an in-memory zip file:
     root = file_tree("@memory")
-    root._file("new_file.txt").write("Hi there !")
+    root._file("hello.txt").write("Hi there !")
     binary_data = root._close()
 
 
