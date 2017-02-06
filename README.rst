@@ -35,6 +35,7 @@ Even in this very simple use case, the syntax is clearer than the ``os`` way,
 which would write as follows:
 
 .. code:: python
+
     import os
 
     with open(os.path.join("poems", "the_raven.txt"), "r") as f:
