@@ -34,14 +34,14 @@ file ``the_seagull.txt`` in the same folder:
 Even in this very simple use case, the syntax is clearer than the ``os`` way,
 which would write as follows:
 
- .. code:: python
-      import os
+.. code:: python
+    import os
 
-      with open(os.path.join("poems", "the_raven.txt"), "r") as f:
-          poem_text = f.read()
-      new_text = poem_text.replace("raven", "seagull")
-      with open(os.path.join("poems", "the_raven.txt"), "w") as f:
-          content = f.write(new_text)
+    with open(os.path.join("poems", "the_raven.txt"), "r") as f:
+        poem_text = f.read()
+    new_text = poem_text.replace("raven", "seagull")
+    with open(os.path.join("poems", "the_raven.txt"), "w") as f:
+        content = f.write(new_text)
 
 Moreover, the same Flametree code also works for files inside a zip archive:
 
