@@ -14,8 +14,8 @@ Flametree is a Python library providing a simple syntax for handling file trees
 (no boilerplate, no ``os.path.join``, ``os.listdir`` etc.), which
 works the same way for different file systems.
 
-Write a Flametree program to read/write disk folders, and your code will also be
-able to read/write zip archives and in-memory archives - which is particularly
+Write a Flametree program to read/write files in disk folders, and your code will also be
+able to read/write in zip archives and virtual (in-memory) archives - which is particularly
 useful on web servers.
 
 As an illustration, here is how to use Flametree to read a file ``texts/poems/the_raven.txt``, replace all
