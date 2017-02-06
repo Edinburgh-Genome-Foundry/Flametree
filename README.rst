@@ -10,7 +10,7 @@ Flametree - Python file operations made easy
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library providing a simple syntax for handling file trees
+Flametree is a Python library providing a simple syntax for handling files and folders
 (no boilerplate, no ``os.path.join``, ``os.listdir`` etc.), which
 works the same way for different file systems.
 
