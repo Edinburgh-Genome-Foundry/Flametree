@@ -10,10 +10,13 @@ Flametree - Python file operations made easy
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
-Flametree is a Python library to simplify file operations on disk file systems, as
-well as zip archives and in-memory "virtual" zip files.
+Flametree is a Python library providing a simple syntax for handling file trees
+(no boilerplate, no ``os.path.join``, ``os.listdir`` etc.), which
+works the same way for different file systems. Write a Flametree program to
+read/write disk folders, and your code will also be able to read/write zip archives
+and in-memory archives - which is particularly useful on web servers.
 
-Here is how to use Flametree to read a file ``texts/poems/the_raven.txt``, replace all
+As an illustration, here is how to use Flametree to read a file ``texts/poems/the_raven.txt``, replace all
 occurences of the word "raven" by "seagull" in the text, and write the result to a new
 file ``the_seagull.txt`` in the same folder:
 
@@ -26,7 +29,19 @@ file ``the_seagull.txt`` in the same folder:
          new_text = poem_text.replace("raven", "seagull")
          root.poems._file("the_seagull.txt").write(new_text)
 
-The same code also works for files inside a zip archive:
+Even in this very simple use case, the syntax is clearer than the ``os`` way,
+which would write as follows:
+
+ .. code:: python
+      import os
+
+      with open(os.path.join("poems", "the_raven.txt"), "r") as f:
+          poem_text = f.read()
+      new_text = poem_text.replace("raven", "seagull")
+      with open(os.path.join("poems", "the_raven.txt"), "w") as f:
+          content = f.write(new_text)
+
+Moreover, the same Flametree code also works for files inside a zip archive:
 
 .. code:: python
 
@@ -35,14 +50,20 @@ The same code also works for files inside a zip archive:
          new_text = poem_text.replace("raven", "seagull")
          root.poems._file("the_seagull.txt").write(new_text)
 
-Again with similar syntax, here is how you create a virtual zip archive in memory, populate it with two files ``poems/haiku.txt``, and ``reports/sales.csv`` and get the archive's binary data back, e.g. for sending it to some distant client:
+Now in hard mode: suppose that your server receives binary zip data of an
+archive containing ``poems/the_raven.txt``, and must return back a new zip
+containing a file ``poems/the_seagull.txt``. Here again, the syntax of the core
+operations is the same:
 
 .. code:: python
 
-     root = file_tree("@memory")
-     root._dir("poems")._file("haiku.txt").write("Hello, world !")
-     root._dir("reports")._file("sales.csv").write("Day 1, 2 match boxes")
-     zip_data = root._close()
+     destination_zip = file_tree("@memory") # Create a new virtual zip
+     with file_tree(the_raven_zip_data) as root:
+         poem_text = root.poems.the_raven_txt.read()
+         new_text = poem_text.replace("raven", "seagull")
+         destination_zip._dir("poems")._file("the_seagull.txt").write(new_text)
+     destination_zip_data = destination_zip._close()
+     # Now send the data to the client
 
 See section *Usage* below for more examples and features.
 
@@ -135,8 +156,8 @@ or even simpler:
 
     root.texts.poems.dover_beach_txt.print_content()
 
-Notice that the ``.`` before ``txt``, are replaced by ``_`` so that the file name
-can be used as an attribute.
+Notice that the ``.`` before ``txt`` was replaced by ``_`` so as to form a valid
+ attribute name.
 
 This syntactic sugar is particularly useful to explore a file tree in
 IPython Notebooks or other editors offering auto-completion:
@@ -234,7 +255,7 @@ Or use ``replace=False`` in ``_dir``:
 .. code:: python
 
     root._dir("data")._file("values_1.csv").write("1, 4, 7")
-    root.data._file("values_2.csv", replace=False).write("2, 9, 7")
+    root._dir("data", replace=False)._file("values_2.csv").write("2, 9, 7")
 
 
 Other operations
@@ -256,7 +277,7 @@ You can move, copy, and delete a file with ``.move(folder)``, ``.copy(folder)``,
 Special rules for ZIP archives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It it not currently possible to modify/delete a file that is already zipped
+It is not currently possible to modify/delete a file that is already zipped
 into an archive (because zips are not really made for that, it would
 be doable but would certainly be a hack).
 

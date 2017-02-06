@@ -1,13 +1,15 @@
 import os
 import re
 
-expr = re.compile(r"[^a-zA-Z\d]")
+non_alphanum_regexpr = re.compile(r"[^a-zA-Z\d]")
 def sanitize_name(name):
+    """Return the name with all non-alphanumerics replaced by '_'. """
     if name[0] in "0123456789":
         name = "_" + name
-    return re.sub(expr, "_", name)
+    return re.sub(non_alphanum_regexpr, "_", name)
 
 class FileTreeElement:
+    """Base class for Directories and Files."""
 
     def __init__(self, location=".", name=None, file_manager=None,
                  replace=False):
@@ -53,6 +55,12 @@ class FileTreeElement:
 
 
 class Directory(FileTreeElement):
+    """Directories contains a list of ``_files`` and subdirectories ``_dirs``.
+
+    You can also access all files in the directory's subtree with
+    ``._all_files``
+
+    """
     _is_dir = True
 
     def _dir(self, name, replace=True):
