@@ -45,7 +45,7 @@ class DiskFileManager:
         else:
             os.remove(target._path)
 
-    def create(self, target, replace=True):
+    def create(self, target, replace=False):
         path = target._path
         if replace and os.path.exists(path):
             self.delete(target)

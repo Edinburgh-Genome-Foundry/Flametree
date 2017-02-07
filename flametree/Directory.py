@@ -90,7 +90,7 @@ class Directory(FileTreeElement):
         else:
             f = File(location=self, name=name, file_manager=self._file_manager)
         # From here we create
-        self._file_manager.create(f)
+        self._file_manager.create(f, replace=replace)
         self._files.append(f)
         self._dict[f._name] = f
         self.__dict__[sanitize_name(f._name)] = f
