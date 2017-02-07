@@ -13,33 +13,33 @@ else:
     from StringIO import StringIO
     StringBytesIO = StringIO
 
-
+EMPTY_ZIP_BYTES = b'PK\x05\x06' + 18 * b'\x00'
 
 class ZipFileManager:
 
-    def __init__(self, path=None, source=None):
-        if source is None:
-            if path == "@memory":
-                source = StringBytesIO()
-            else:
-                source = path
-        elif isinstance(source, (str, bytes)):
-            source = StringBytesIO(source)
-        self.source = source
+    def __init__(self, path=None, source=None, replace=False):
         self.path = "." if path is None else path
-        if path == "@memory":
-            # Horrible hack: we give an empty but valid zip to the reader:
-            reader_source = StringBytesIO(b'PK\x05\x06' + 18 * b'\x00')
-            self.reader = zipfile.ZipFile(reader_source, "r")
-
-        elif isinstance(source, str) and not os.path.exists(source):
-            reader_source = StringBytesIO(b'PK\x05\x06' + 18 * b'\x00')
-            self.reader = zipfile.ZipFile(reader_source, "r")
-        else:
-            self.reader = zipfile.ZipFile(source, "r")
+        if path == "@memory": # VIRTUAL ZIP FROM SCRATCH
+            self.source = StringBytesIO()
+            self.writer = zipfile.ZipFile(self.source, "a",
+                                          compression=zipfile.ZIP_DEFLATED)
+            self.reader = zipfile.ZipFile(StringBytesIO(EMPTY_ZIP_BYTES), "r")
+        elif path is not None:  # ON DISK ZIP
+            self.source = path
+            if replace or not os.path.exists(path):
+                with open(self.source, "wb") as f:
+                    f.write(EMPTY_ZIP_BYTES)
+            self.writer = zipfile.ZipFile(self.source, "a",
+                                          compression=zipfile.ZIP_DEFLATED)
+            self.reader = zipfile.ZipFile(self.source, "r")
+        else: # VIRTUAL ZIP FROM EXISTING DATA
+            self.source = source
+            if isinstance(self.source, (str, bytes)):
+                self.source = StringBytesIO(source)
+            self.writer = zipfile.ZipFile(self.source, "a",
+                                          compression=zipfile.ZIP_DEFLATED)
+            self.reader = zipfile.ZipFile(self.source, "r")
         self.files_data = defaultdict(lambda *a: StringBytesIO())
-        self.writer = zipfile.ZipFile(source, "a",
-                                      compression=zipfile.ZIP_DEFLATED)
 
     def relative_path(self, target):
         path = target._path[len(self.path)+1:]
@@ -112,17 +112,6 @@ class ZipFileManager:
         # now it doesn't really matter because the directories are created
         # the moment we create a file whose address in this directory.
 
-    def tell(self, fileobject):
-        path = self.relative_path(fileobject)
-        return self.files_data[path].tell()
-
-    def flush(self, fileobject):
-        path = self.relative_path(fileobject)
-        return self.files_data[path].flush()
-
-
-
-
     def path_exists_in_file(self, directory):
         return self.relative_path(directory) in self.reader.namelist()
 
@@ -131,13 +120,19 @@ class ZipFileManager:
     def join_paths(*paths):
         return "/".join(*paths)
 
-    def flush(self, fileobject):
-        path = self.relative_path(fileobject)
-        return self.files_data[path].flush()
-
     def close(self):
         for path, data in self.files_data.items():
             self.writer.writestr(path, data.getvalue())
         self.writer.close()
         if hasattr(self.source, "getvalue"):
             return self.source.getvalue()
+
+    def open(self, fileobject, mode="a"):
+        path = self.relative_path(fileobject)
+        if mode in ("r", "rb"):
+            if path in self.files_data:
+                return StringBytesIO(self.files_data.getvalue())
+            else:
+                return StringBytesIO(self.read(fileobject, mode=mode))
+        else:
+            return self.files_data[path]

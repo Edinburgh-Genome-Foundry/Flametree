@@ -4,6 +4,13 @@ import shutil
 
 class DiskFileManager:
 
+    def __init__(self, target, replace=False):
+        self.target = target
+        if replace and os.path.exists(target):
+            shutil.rmtree(target)
+        if not os.path.exists(target):
+            os.makedirs(target)
+
     @staticmethod
     def list_files(directory):
         path = directory._path
@@ -11,6 +18,7 @@ class DiskFileManager:
             name for name in os.listdir(path)
             if os.path.isfile(os.path.join(path, name))
         ]
+
     @staticmethod
     def list_dirs(directory):
         path = directory._path
@@ -56,9 +64,5 @@ class DiskFileManager:
     def close():
         pass
 
-    def tell(self, fileobject):
-        with open(fileobject._path, "a") as f:
-             return f.tell()
-
-    def flush(self, fileobject):
-        pass
+    def open(self, fileobject, mode="a"):
+        return open(fileobject._path, mode=mode)

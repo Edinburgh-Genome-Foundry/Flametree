@@ -11,8 +11,7 @@ def sanitize_name(name):
 class FileTreeElement:
     """Base class for Directories and Files."""
 
-    def __init__(self, location=".", name=None, file_manager=None,
-                 replace=False):
+    def __init__(self, location=".", name=None, file_manager=None):
 
         # Initialize the properties and the files manager
         self._name = name
@@ -21,10 +20,7 @@ class FileTreeElement:
             self._path = self._location
         else:
             self._path = os.path.join(self._location._path, self._name)
-        if file_manager is None:
-            file_manager = self._init_file_manager()
         self._file_manager = file_manager
-        self._file_manager.create(self, replace=replace)
 
         # Automatically explore the folder and subfolders to build a tree
         if self._is_dir:
@@ -67,25 +63,39 @@ class Directory(FileTreeElement):
         """Create and return a new subdirectory in the current directory.
         If replace is True and the subdirectory exists, it is overwritten.
         """
-        if name not in self._dict:
+
+        if name in self._dict:
+            subdir = self["name"]
+            if replace:
+                subdir._delete()
+            else:
+                return subdir
+        else:
             subdir = Directory(location=self, name=name,
-                               file_manager=self._file_manager,
-                               replace=replace)
-            self._dirs.append(subdir)
-            self._dict[name] = subdir
-            self.__dict__[sanitize_name(subdir._name)] = subdir
-        return self._dict[name]
+                               file_manager=self._file_manager)
+        # From here we create
+        self._file_manager.create(subdir, replace=replace)
+        self._dirs.append(subdir)
+        self._dict[name] = subdir
+        self.__dict__[sanitize_name(subdir._name)] = subdir
+        return subdir
 
     def _file(self, name, replace=True):
         """Create a new file or overwrite an existing one."""
-        if name not in self._dict:
-            f = File(location=self, name=name,
-                     file_manager=self._file_manager,
-                     replace=replace)
-            self._files.append(f)
-            self._dict[f._name] = f
-            self.__dict__[sanitize_name(f._name)] = f
-        return self._dict[name]
+        if name in self._dict:
+            f = self["name"]
+            if replace:
+                f.delete()
+            else:
+                return f
+        else:
+            f = File(location=self, name=name, file_manager=self._file_manager)
+        # From here we create
+        self._file_manager.create(f)
+        self._files.append(f)
+        self._dict[f._name] = f
+        self.__dict__[sanitize_name(f._name)] = f
+        return f
 
     @property
     def _all_files(self):
@@ -190,8 +200,20 @@ class File(FileTreeElement):
         location.__dict__.pop(self._name, None)
         location._files = [f for f in location._dirs if f._name != self._name]
 
-    def tell(self):
-        return self._file_manager.tell(self)
+    def open(self, mode="a"):
+        return self._file_manager.open(self, mode=mode)
 
-    def flush(self):
-        return self._file_manager.flush(self)
+    @property
+    def _name_no_extension(self):
+        """File name without the extension"""
+        return self._name.split(".")[0]
+
+    @property
+    def _path_no_extension(self):
+        """File path without the extension"""
+        return self._path.split(".")[0]
+
+    @property
+    def _extension(self):
+        """File path without the extension"""
+        return "" if "." not in self._name else self._name.split(".")[-1]

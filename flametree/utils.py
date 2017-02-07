@@ -1,6 +1,14 @@
+import os
+import shutil
+
 from .ZipFileManager import ZipFileManager
 from .DiskFileManager import DiskFileManager
 from .Directory import Directory
+
+import string
+printable = set(string.printable) - set("\x0b\x0c")
+def is_hex(s):
+    return any(c not in printable for c in s)
 
 def file_tree(target, replace=False):
     """Open a connection to a file tree which can be either a disk folder, a
@@ -17,19 +25,12 @@ def file_tree(target, replace=False):
       If True, will remove the target if it already exists. If False, new files
       will be written inside the target and some files may be overwritten.
     """
-    if not isinstance(target, str):
+    if ((not isinstance(target, str)) or is_hex(target)):
         return Directory(file_manager=ZipFileManager(source=target))
     elif target == '@memory':
         return Directory("@memory", file_manager=ZipFileManager("@memory"))
     elif target.lower().endswith(".zip"):
-        return Directory(target, file_manager=ZipFileManager(target),
-                         replace=replace)
+        return Directory(target, file_manager=ZipFileManager(target,
+                                                             replace=replace))
     else:
-        try:
-            return Directory(target, file_manager=DiskFileManager(),
-                             replace=replace)
-        except:
-            pass
-
-    # Last chance, lets try again if it's some kind of zip data:
-    return Directory(file_manager=ZipFileManager(source=target))
+        return Directory(target, file_manager=DiskFileManager(target))

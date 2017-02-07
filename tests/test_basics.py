@@ -25,8 +25,9 @@ def test_directory(tmpdir):
 
     # APPEND TO AN EXISTING DIRECTORY
     root._dir("newdir")._file("new_file.txt").write("I am a new file")
-
+    print("ah ah ah ah ah ah")
     root = file_tree(dir_path)
+    print("ojojjoojojojojoj")
     assert set([f._name for f in root._all_files]) == \
         ALL_FILES.union(set(["new_file.txt"]))
 
@@ -95,17 +96,23 @@ def test_file_tree(tmpdir):
     assert root._file_manager.__class__ == ZipFileManager
     assert [f._name for f in root._all_files] == ["test.txt"]
 
-def test_file_writer(tmpdir):
+def test_matplotlib_writer(tmpdir):
     zip_path = os.path.join(str(tmpdir), "archive.zip")
-    print (zip_path)
+    folder_path = os.path.join(str(tmpdir), "test_folder")
     try:
         import matplotlib.pyplot as plt
     except ImportError:
-        print("Not running test_file_writer as Matplotlib is not available.")
+        print("Not running test_matplotlib_writer: Matplotlib not available.")
         return True
-    with file_tree(zip_path) as root:
-        fig, ax = plt.subplots(1)
-        fig_dir = root._dir("figures2", replace=False)
-        fig.savefig(fig_dir._file("nice2.png"), format="png")
-    root = file_tree(zip_path)
-    assert [f._name for f in root._all_files] == ["nice2.png"]
+    fig, ax = plt.subplots(1)
+    with file_tree(zip_path) as zip_root:
+        fig_dir = zip_root._dir("figures", replace=False)
+        fig.savefig(fig_dir._file("fig.png"), format="png")
+        fig.savefig(fig_dir._file("fig.pdf").open("wb"), format="pdf")
+    with file_tree(folder_path) as root:
+        fig_dir = root._dir("figures", replace=False)
+        fig.savefig(fig_dir._file("fig.png"), format="png")#
+        fig.savefig(fig_dir._file("fig.pdf").open("wb"), format="pdf")
+    assert (set([f._name for f in root._all_files]) ==
+            set(["fig.png", "fig.pdf"]))
+    assert os.path.exists(os.path.join(folder_path, "figures", "fig.pdf"))
