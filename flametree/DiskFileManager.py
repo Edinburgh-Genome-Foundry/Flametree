@@ -52,6 +52,7 @@ class DiskFileManager:
     def join_paths(*paths):
         return os.path.join(*paths)
 
+    @staticmethod
     def close():
         pass
 
