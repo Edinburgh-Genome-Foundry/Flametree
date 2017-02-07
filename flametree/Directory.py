@@ -189,3 +189,9 @@ class File(FileTreeElement):
         location._dict.pop(self._name)
         location.__dict__.pop(self._name, None)
         location._files = [f for f in location._dirs if f._name != self._name]
+
+    def tell(self):
+        return self._file_manager.tell(self)
+
+    def flush(self):
+        return self._file_manager.flush(self)

@@ -112,6 +112,16 @@ class ZipFileManager:
         # now it doesn't really matter because the directories are created
         # the moment we create a file whose address in this directory.
 
+    def tell(self, fileobject):
+        path = self.relative_path(fileobject)
+        return self.files_data[path].tell()
+
+    def flush(self, fileobject):
+        path = self.relative_path(fileobject)
+        return self.files_data[path].flush()
+
+
+
 
     def path_exists_in_file(self, directory):
         return self.relative_path(directory) in self.reader.namelist()
@@ -120,6 +130,10 @@ class ZipFileManager:
     @staticmethod
     def join_paths(*paths):
         return "/".join(*paths)
+
+    def flush(self, fileobject):
+        path = self.relative_path(fileobject)
+        return self.files_data[path].flush()
 
     def close(self):
         for path, data in self.files_data.items():

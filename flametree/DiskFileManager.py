@@ -54,3 +54,10 @@ class DiskFileManager:
 
     def close():
         pass
+
+    def tell(self, fileobject):
+        with open(fileobject._path, "a") as f:
+             return f.tell()
+
+    def flush(self, fileobject):
+        pass
