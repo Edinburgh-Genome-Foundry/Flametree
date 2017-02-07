@@ -19,6 +19,18 @@ def test_directory(tmpdir):
     root.texts.shorts._file("bli.txt").write("bli bli bli")
     root.texts.shorts._file("blu.txt").write("blu blu blu")
 
+    # TEST REPLACE BEHAVIOR
+    root._dir("trash")._file("bla.txt").write("bla bla bla")
+    root._dir("trash")._file("blu.txt").write("blu blu blu")
+    print (root._tree_view())
+    assert root.trash._filenames == ["blu.txt"]
+
+    root.trash._delete()
+    root._dir("trash")._file("bla.txt").write("bla bla bla")
+    root._dir("trash", replace=False)._file("blu.txt").write("blu blu blu")
+    assert set(root.trash._filenames) == set(["bla.txt", "blu.txt"])
+
+
     # READ AN EXISTING DIRECTORY
     root = file_tree(dir_path)
     assert set([f._name for f in root._all_files]) == ALL_FILES

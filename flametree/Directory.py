@@ -65,14 +65,13 @@ class Directory(FileTreeElement):
         """
 
         if name in self._dict:
-            subdir = self["name"]
+            subdir = self[name]
             if replace:
-                subdir._delete()
+                self[name]._delete()
             else:
-                return subdir
-        else:
-            subdir = Directory(location=self, name=name,
-                               file_manager=self._file_manager)
+                return self[name]
+        subdir = Directory(location=self, name=name,
+                           file_manager=self._file_manager)
         # From here we create
         self._file_manager.create(subdir, replace=replace)
         self._dirs.append(subdir)
@@ -83,7 +82,7 @@ class Directory(FileTreeElement):
     def _file(self, name, replace=True):
         """Create a new file or overwrite an existing one."""
         if name in self._dict:
-            f = self["name"]
+            f = self[name]
             if replace:
                 f.delete()
             else:
@@ -96,6 +95,18 @@ class Directory(FileTreeElement):
         self._dict[f._name] = f
         self.__dict__[sanitize_name(f._name)] = f
         return f
+
+    @property
+    def _filenames(self):
+        """Return the list of names of all files in the dir (not nested)"""
+        return [f._name for f in self._files]
+
+    @property
+    def _dirnames(self):
+        """Return the list of names of all subdirectories (not nested)"""
+        return [subdir._name for subdir in self._dirs]
+
+
 
     @property
     def _all_files(self):
@@ -198,7 +209,7 @@ class File(FileTreeElement):
         location = self._location
         location._dict.pop(self._name)
         location.__dict__.pop(self._name, None)
-        location._files = [f for f in location._dirs if f._name != self._name]
+        location._files = [f for f in location._files if f._name != self._name]
 
     def open(self, mode="a"):
         return self._file_manager.open(self, mode=mode)
