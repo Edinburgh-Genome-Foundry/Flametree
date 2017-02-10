@@ -80,7 +80,7 @@ It can be installed by unzipping the source code in one directory and using this
 
 You can also install it directly from the Python Package Index with this command: ::
 
-    sudo pip flametree install
+    sudo pip install flametree
 
 
 Contribute
