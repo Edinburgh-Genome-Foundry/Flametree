@@ -40,7 +40,7 @@ which would write as follows:
     with open(os.path.join("poems", "the_raven.txt"), "r") as f:
         poem_text = f.read()
     new_text = poem_text.replace("raven", "seagull")
-    with open(os.path.join("poems", "the_raven.txt"), "w") as f:
+    with open(os.path.join("poems", "the_seagull.txt"), "w") as f:
         content = f.write(new_text)
 
 Moreover, the same Flametree code also works for files inside a zip archive:
