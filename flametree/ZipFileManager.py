@@ -16,6 +16,26 @@ else:
 EMPTY_ZIP_BYTES = b'PK\x05\x06' + 18 * b'\x00'
 
 class ZipFileManager:
+    """Reader and Writer of Zip files.
+
+    Parameters
+    ----------
+
+    path
+      Path to a zip archive to be read or written to.
+
+    source
+      Either a string/byte representing zipped data, or a file-like object
+      connected to zipped data.
+
+    replace
+      In case the provided ``path`` is pointing to an already-existing file,
+      should it be erased or appended to ?
+    """
+    # The Zipfile manager manages at the same time files already in the zip
+    # archive when it was created, and files left uncompressed in memory.
+    # The uncompressed files in memory are flushed into the archive upon
+    # closing of the manager, with the ``.close`` method.
 
     def __init__(self, path=None, source=None, replace=False):
         self.path = "." if path is None else path
