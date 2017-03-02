@@ -9,8 +9,10 @@ PYTHON3 = (sys.version_info[0] == 3)
 if PYTHON3:
     from io import StringIO, BytesIO
     StringBytesIO = BytesIO
+
 else:
     from StringIO import StringIO
+    BytesIO = StringIO
     StringBytesIO = StringIO
 
 EMPTY_ZIP_BYTES = b'PK\x05\x06' + 18 * b'\x00'
@@ -155,4 +157,8 @@ class ZipFileManager:
             else:
                 return StringBytesIO(self.read(fileobject, mode=mode))
         else:
+            if mode == 'w' and path not in self.files_data:
+                self.files_data[path] = StringIO()
+            elif mode == 'wb' and path not in self.files_data:
+                self.files_data[path] = BytesIO()
             return self.files_data[path]
