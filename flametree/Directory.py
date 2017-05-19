@@ -174,7 +174,7 @@ class Directory(FileTreeElement):
 class File(FileTreeElement):
     _is_dir = False
 
-    def read(self, mode="r"):
+    def read(self, mode="r", **kw):
         """Return the file's content as a string (mode 'r') or bytes ('rb').
         """
         return self._file_manager.read(self, mode=mode)
