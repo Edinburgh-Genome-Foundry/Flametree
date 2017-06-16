@@ -87,7 +87,8 @@ Contribute
 -----------
 
 Flametree is an open-source software originally written by Zulko_ and released on Github_
-under the MIT licence (¢ Edinburgh Genome Foundry). Everyone is welcome to contribute !
+under the MIT licence (Copyright Edinburgh Genome Foundry).
+Everyone is welcome to contribute !
 In particular if you have ideas of new kinds of file systems to add to Flametree.
 
 
