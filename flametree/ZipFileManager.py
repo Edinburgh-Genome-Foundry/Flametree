@@ -69,35 +69,24 @@ class ZipFileManager:
             path += "/"
         return path
 
+    def list_directory_components(self, directory, regexpr):
+        path = self.relative_path(directory)
+        matches = [
+            re.match(regexpr % path, name)
+            for name in self.reader.namelist()
+        ]
+        return sorted(set([
+            match.groups()[0]
+            for match in matches
+            if match is not None
+            and (match.groups()[0] != "")
+        ]))
 
     def list_files(self, directory):
-        path = self.relative_path(directory)
-        matches = [
-            re.match(r"%s([^/]*)$" % path, name)
-            for name in self.reader.namelist()
-        ]
-        files = set([
-            match.groups()[0]
-            for match in matches
-            if match is not None
-            and (match.groups()[0] != "")
-        ])
-        return files
-
+        return self.list_directory_components(directory, regexpr=r"%s([^/]*)$")
 
     def list_dirs(self, directory):
-        path = self.relative_path(directory)
-        matches = [
-            re.match(r"%s([^/]*)/" % path, name)
-            for name in self.reader.namelist()
-        ]
-        dirs = set([
-            match.groups()[0]
-            for match in matches
-            if match is not None
-            and (match.groups()[0] != "")
-        ])
-        return dirs
+        return self.list_directory_components(directory, regexpr=r"%s([^/]*)/")
 
 
     def read(self, fileobject, mode="r"):

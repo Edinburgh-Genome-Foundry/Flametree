@@ -16,22 +16,21 @@ class FileTreeElement:
         # Initialize the properties and the files manager
         self._name = name
         self._location = location
+        self._file_manager = file_manager
         if name is None:
             self._path = self._location
         else:
             self._path = os.path.join(self._location._path, self._name)
-        self._file_manager = file_manager
 
         # Automatically explore the folder and subfolders to build a tree
         if self._is_dir:
             self._dict = {}
             self._files = []
             self._dirs = []
-            if self._is_dir:
-                for filename in self._file_manager.list_files(self):
-                    self._file(filename, replace=False)
-                for dirname in self._file_manager.list_dirs(self):
-                    self._dir(dirname, replace=False)
+            for filename in self._file_manager.list_files(self):
+                self._file(filename, replace=False)
+            for dirname in self._file_manager.list_dirs(self):
+                self._dir(dirname, replace=False)
 
     def _close(self):
         """Close the file manager."""
