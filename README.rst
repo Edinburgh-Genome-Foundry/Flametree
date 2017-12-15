@@ -1,10 +1,9 @@
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png
-   :alt: [logo]
-   :align: center
-   :width: 600px
+.. raw:: html
 
-Flametree - Python file operations made easy
-==============================================
+    <p align="center">
+    <img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png" width="500">
+    </p>
+    <h2 align="center"> Python file operations made easy </h2>
 
 .. image:: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree.svg?branch=master
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
