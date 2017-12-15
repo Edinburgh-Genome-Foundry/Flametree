@@ -9,6 +9,10 @@
    :target: https://travis-ci.org/Edinburgh-Genome-Foundry/Flametree
    :alt: Travis CI build status
 
+.. image:: https://coveralls.io/repos/github/Edinburgh-Genome-Foundry/Flametree/badge.svg
+   :target: https://coveralls.io/github/Edinburgh-Genome-Foundry/Flametree
+
+
 Flametree is a Python library which provides a simple syntax for handling files and folders
 (no ``os.path.join``, ``os.listdir`` etc.), and works the same way for different file systems.
 
