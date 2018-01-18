@@ -92,9 +92,12 @@ class ZipFileManager:
     def read(self, fileobject, mode="r"):
         path = self.relative_path(fileobject).strip("/")
         if path in self.files_data:
-            return self.files_data[path].getvalue()
+            result = self.files_data[path].getvalue()
         else:
-            return self.reader.read(path)
+            result = self.reader.read(path)
+        if mode == "r":
+            result = result.decode('utf8')
+        return result
 
     def write(self, fileobject, content, mode="w"):
         path = self.relative_path(fileobject)
@@ -141,10 +144,17 @@ class ZipFileManager:
     def open(self, fileobject, mode="a"):
         path = self.relative_path(fileobject)
         if mode in ("r", "rb"):
+            container = {
+                'r': StringIO,
+                'rb': BytesIO
+            }[mode]
             if path in self.files_data:
-                return StringBytesIO(self.files_data.getvalue())
+                content = self.files_data[path].getvalue()
+                if mode == 'r':
+                    content = content.decode()
+                return container(content)
             else:
-                return StringBytesIO(self.read(fileobject, mode=mode))
+                return container(self.read(fileobject, mode=mode))
         else:
             if mode == 'w' and path not in self.files_data:
                 self.files_data[path] = StringIO()

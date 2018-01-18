@@ -152,7 +152,8 @@ class Directory(FileTreeElement):
         for f in self._files:
             f.copy(target, replace=replace_files)
         for subdir in self._dirs:
-            target = target._dir(subdir._name, replace=replace_dirs)
+            # print ("subdir", subdir)
+            # new_target = target._dir(subdir._name, replace=replace_dirs)
             subdir._copy(target, replace_dirs=replace_dirs,
                          replace_files=replace_files)
 

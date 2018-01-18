@@ -1,6 +1,7 @@
 import os
 import sys
 from flametree import (file_tree, DiskFileManager, ZipFileManager)
+import pytest
 
 PYTHON3 = (sys.version_info[0] == 3)
 
@@ -19,10 +20,15 @@ def test_directory(tmpdir):
     root.texts.shorts._file("bli.txt").write("bli bli bli")
     root.texts.shorts._file("blu.txt").write("blu blu blu")
 
-    # TEST REPLACE BEHAVIOR
+    # READ AN EXISTING FILE (two ways)
+    assert root.texts.shorts.bla_txt.read() == 'bla bla bla'
+    with root.texts.shorts.bla_txt.open('r') as f:
+        assert f.read() == 'bla bla bla'
+
+
+    # TEST REPLACE BEHAVIOR (replace=False)
     root._dir("trash")._file("bla.txt").write("bla bla bla")
     root._dir("trash")._file("blu.txt").write("blu blu blu")
-    print (root._tree_view())
     assert root.trash._filenames == ["blu.txt"]
 
     root.trash._delete()
@@ -37,9 +43,7 @@ def test_directory(tmpdir):
 
     # APPEND TO AN EXISTING DIRECTORY
     root._dir("newdir")._file("new_file.txt").write("I am a new file")
-    print("ah ah ah ah ah ah")
     root = file_tree(dir_path)
-    print("ojojjoojojojojoj")
     assert set([f._name for f in root._all_files]) == \
         ALL_FILES.union(set(["new_file.txt"]))
 
@@ -50,6 +54,28 @@ def test_directory(tmpdir):
     assert not os.path.exists(path)
     assert not any([f._path == path for f in root.newdir._files])
 
+    # TEST DIRECTORY COPYING
+    root._dir('new_folder')
+    root.texts._copy(root.new_folder)
+    assert [d._name for d in root.new_folder._dirs] == ['texts']
+
+    # TEST DIRECTORY MOVING
+    root._dir('newer_folder')
+    root.new_folder.texts._move(root.newer_folder)
+    assert [d._name for d in root.new_folder._dirs] == []
+    assert [d._name for d in root.newer_folder._dirs] == ['texts']
+
+    # TEST FILE COPYING
+    root._dir('newest_folder')
+    root.newer_folder.texts.shorts.bla_txt.copy(root.newest_folder)
+    assert [f._name for f in root.newest_folder._files] == ['bla.txt']
+
+    # TEST FILE MOVING
+    root._dir('newester_folder')
+    root.newer_folder.texts.shorts.bla_txt.move(root.newester_folder)
+    assert [f._name for f in root.newester_folder._files] == ['bla.txt']
+    remaining_files = set([d._name for d in root.newer_folder._all_files])
+    assert  remaining_files == set(["bli.txt", "blu.txt"])
 
 
 def test_zip(tmpdir):
@@ -85,10 +111,20 @@ def test_zip(tmpdir):
     root.newdir._file("new_file2.txt").write("I am another new file")
     root._close()
 
-    # Final test
+    # REOPEN A ZIP
     root = file_tree(zip_path)
     assert set([f._name for f in root._all_files]) == \
         ALL_FILES.union(set(["new_file.txt", "new_file2.txt"]))
+
+    print (root._tree_view())
+
+    root.newdir._file('new_file_that_doesnt_exist.txt')
+    with pytest.raises(NotImplementedError):
+        root.newdir._file('new_file.txt') # overwrite is not supported.
+
+    # Open/read file in zip
+    with root.texts.shorts.bla_txt.open('r') as f:
+        assert f.read() == 'bla bla bla'
 
 def test_file_tree(tmpdir):
     """Assert that the directory function dispatches as expected."""
