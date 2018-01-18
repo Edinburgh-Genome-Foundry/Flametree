@@ -72,7 +72,7 @@ class ZipFileManager:
     def list_directory_components(self, directory, regexpr):
         path = self.relative_path(directory)
         matches = [
-            re.match(regexpr % path, name)
+            re.match(regexpr % re.escape( path ), name)
             for name in self.reader.namelist()
         ]
         return sorted(set([
