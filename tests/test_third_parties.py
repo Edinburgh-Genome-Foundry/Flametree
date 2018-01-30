@@ -2,6 +2,7 @@ import os
 import sys
 from flametree import (file_tree, DiskFileManager, ZipFileManager)
 import pytest
+import posixpath
 
 # THIRD PARTY LIBS BEING TESTED
 import matplotlib
@@ -20,7 +21,7 @@ def test_weasyprint(tmpdir):
     root = file_tree(str(tmpdir)) # or 'archive.zip' to write in an archive.
     html = weasyprint.HTML(string="<b>Hello</b> world!", base_url='.')
     html.write_pdf(root._dir("pdfs")._file("test.pdf"))
-    with open(os.path.join(path, 'pdfs', 'test.pdf'), "rb") as f:
+    with open(posixpath.join(path, 'pdfs', 'test.pdf'), "rb") as f:
         filesize = len(f.read())
         assert 8000 < filesize
 
@@ -35,10 +36,10 @@ def test_matplotlib(tmpdir):
             fig, ax = plt.subplots(1)
             pdf_io.savefig(fig)
             plt.close(fig)
-    with open(os.path.join(path, 'fig1.png'), "rb") as f:
+    with open(posixpath.join(path, 'fig1.png'), "rb") as f:
         filesize = len(f.read())
         assert filesize > 7000
-    with open(os.path.join(path, "plots.pdf"), "rb") as f:
+    with open(posixpath.join(path, "plots.pdf"), "rb") as f:
         filesize = len(f.read())
         assert filesize > 6000
 

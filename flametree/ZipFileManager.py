@@ -2,6 +2,7 @@ import os
 import sys
 import zipfile
 import re
+import posixpath
 from collections import defaultdict
 
 PYTHON3 = (sys.version_info[0] == 3)
@@ -48,7 +49,7 @@ class ZipFileManager:
             self.reader = zipfile.ZipFile(StringBytesIO(EMPTY_ZIP_BYTES), "r")
         elif path is not None:  # ON DISK ZIP
             self.source = path
-            if replace or not os.path.exists(path):
+            if replace or not posixpath.exists(path):
                 with open(self.source, "wb") as f:
                     f.write(EMPTY_ZIP_BYTES)
             self.writer = zipfile.ZipFile(self.source, "a",

@@ -2,6 +2,7 @@ import os
 import sys
 from flametree import (file_tree, DiskFileManager, ZipFileManager)
 import pytest
+import posixpath
 
 PYTHON3 = (sys.version_info[0] == 3)
 
@@ -12,7 +13,7 @@ ALL_FILES = set(["bla.txt", "bli.txt", "blu.txt", "Readme.md"])
 
 def test_directory(tmpdir):
     # CREATE AND POPULATE A DIRECTORY FROM SCRATCH
-    dir_path = os.path.join(str(tmpdir), "test_dir")
+    dir_path = posixpath.join(str(tmpdir), "test_dir")
     root = file_tree(dir_path)
     assert root._file_manager.__class__ == DiskFileManager
     root._file("Readme.md").write("This is a test zip")
@@ -49,9 +50,9 @@ def test_directory(tmpdir):
 
     # TEST DELETION
     path = root.newdir.new_file_txt._path
-    assert os.path.exists(path)
+    assert posixpath.exists(path)
     root.newdir.new_file_txt.delete()
-    assert not os.path.exists(path)
+    assert not posixpath.exists(path)
     assert not any([f._path == path for f in root.newdir._files])
 
     # TEST DIRECTORY COPYING
@@ -99,7 +100,7 @@ def test_zip(tmpdir):
 
     # VERIFY THAT THE DATA RECEIVED CAN BE WRITTEN TO A VALID ZIP
 
-    zip_path = os.path.join(str(tmpdir), "test.zip")
+    zip_path = posixpath.join(str(tmpdir), "test.zip")
     with open(zip_path, ("wb" if PYTHON3 else "w")) as f:
         f.write(new_data)
     root = file_tree(zip_path)
@@ -129,10 +130,10 @@ def test_zip(tmpdir):
 def test_file_tree(tmpdir):
     """Assert that the directory function dispatches as expected."""
 
-    root = file_tree(os.path.join(str(tmpdir), "my_folder/"))
+    root = file_tree(posixpath.join(str(tmpdir), "my_folder/"))
     assert root._file_manager.__class__ == DiskFileManager
 
-    root = file_tree(os.path.join(str(tmpdir), "my_archive.zip"))
+    root = file_tree(posixpath.join(str(tmpdir), "my_archive.zip"))
     assert root._file_manager.__class__ == ZipFileManager
 
     root = file_tree("@memory")
@@ -145,8 +146,8 @@ def test_file_tree(tmpdir):
     assert [f._name for f in root._all_files] == ["test.txt"]
 
 def test_matplotlib_writer(tmpdir):
-    zip_path = os.path.join(str(tmpdir), "archive.zip")
-    folder_path = os.path.join(str(tmpdir), "test_folder")
+    zip_path = posixpath.join(str(tmpdir), "archive.zip")
+    folder_path = posixpath.join(str(tmpdir), "test_folder")
     try:
         import matplotlib.pyplot as plt
     except ImportError:
@@ -163,4 +164,4 @@ def test_matplotlib_writer(tmpdir):
         fig.savefig(fig_dir._file("fig.pdf").open("wb"), format="pdf")
     assert (set([f._name for f in root._all_files]) ==
             set(["fig.png", "fig.pdf"]))
-    assert os.path.exists(os.path.join(folder_path, "figures", "fig.pdf"))
+    assert posixpath.exists(posixpath.join(folder_path, "figures", "fig.pdf"))

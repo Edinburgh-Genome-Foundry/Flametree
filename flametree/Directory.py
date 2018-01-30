@@ -1,5 +1,6 @@
 import os
 import re
+import posixpath
 
 non_alphanum_regexpr = re.compile(r"[^a-zA-Z\d]")
 def sanitize_name(name):
@@ -20,7 +21,7 @@ class FileTreeElement:
         if name is None:
             self._path = self._location
         else:
-            self._path = os.path.join(self._location._path, self._name)
+            self._path = posixpath.join(self._location._path, self._name)
 
         # Automatically explore the folder and subfolders to build a tree
         if self._is_dir:
