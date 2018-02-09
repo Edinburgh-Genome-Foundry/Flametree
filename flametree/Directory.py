@@ -180,8 +180,7 @@ class File(FileTreeElement):
         return self._file_manager.read(self, mode=mode)
 
     def write(self, content, mode="a"):
-        """Write data in the file.
-        """
+        """Write data in the file."""
         if hasattr(content, "decode") and not mode.endswith("b"):
             mode += "b" # You'll thank me for this. Unless it breaks something.
         self._file_manager.write(self, content, mode=mode)
@@ -228,3 +227,6 @@ class File(FileTreeElement):
     def _extension(self):
         """File path without the extension"""
         return "" if "." not in self._name else self._name.split(".")[-1]
+
+    def __lt__(self, other):
+        return self._path < other._path

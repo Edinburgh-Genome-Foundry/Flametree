@@ -142,6 +142,7 @@ class ZipFileManager:
             return self.source.getvalue()
 
     def open(self, fileobject, mode="a"):
+
         path = self.relative_path(fileobject)
         if mode in ("r", "rb"):
             container = {
