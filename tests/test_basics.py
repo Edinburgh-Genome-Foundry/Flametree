@@ -155,11 +155,11 @@ def test_matplotlib_writer(tmpdir):
     fig, ax = plt.subplots(1)
     with file_tree(zip_path) as zip_root:
         fig_dir = zip_root._dir("figures", replace=False)
-        fig.savefig(fig_dir._file("fig.png"), format="png")
+        fig.savefig(fig_dir._file("fig.png").open('wb'), format="png")
         fig.savefig(fig_dir._file("fig.pdf").open("wb"), format="pdf")
     with file_tree(folder_path) as root:
         fig_dir = root._dir("figures", replace=False)
-        fig.savefig(fig_dir._file("fig.png"), format="png")#
+        fig.savefig(fig_dir._file("fig.png").open('wb'), format="png")#
         fig.savefig(fig_dir._file("fig.pdf").open("wb"), format="pdf")
     assert (set([f._name for f in root._all_files]) ==
             set(["fig.png", "fig.pdf"]))

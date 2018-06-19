@@ -29,7 +29,7 @@ def test_matplotlib(tmpdir):
     path = str(tmpdir)
     root = file_tree(path)
     fig, ax = plt.subplots(1)
-    fig.savefig(root._file('fig1.png'), format='png')
+    fig.savefig(root._file('fig1.png').open('wb'), format='png')
     with PdfPages(root._file("plots.pdf").open("wb")) as pdf_io:
         for i in range(3):
             fig, ax = plt.subplots(1)
