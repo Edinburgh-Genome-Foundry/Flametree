@@ -20,11 +20,14 @@ def file_tree(target, replace=False):
     target
       Either the path to a target folder, or a zip file, or '@memory' to write
       a zip file in memory (at which case a string of the zip file is returned)
+      If the target is already a flametree directory, it is returned as-is.
 
     replace
       If True, will remove the target if it already exists. If False, new files
       will be written inside the target and some files may be overwritten.
     """
+    if isinstance(target, Directory):
+        return target
     if ((not isinstance(target, str)) or is_hex(target)):
         return Directory(file_manager=ZipFileManager(source=target))
     elif target == '@memory':
