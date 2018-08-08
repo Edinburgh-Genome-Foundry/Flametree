@@ -10,7 +10,7 @@ setup(name='flametree',
       author='Zulko',
       description='Python file and zip operations made easy',
       url='https://github.com/Edinburgh-Genome-Foundry/Flametree',
-      long_description=open('README.rst').read(),
+      long_description=open('pypi-readme.rst').read(),
       license='MIT',
       keywords="file system, zip, archive, fil, directory",
       packages=find_packages(exclude='docs'))
