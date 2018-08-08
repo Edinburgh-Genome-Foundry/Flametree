@@ -12,5 +12,5 @@ setup(name='flametree',
       url='https://github.com/Edinburgh-Genome-Foundry/Flametree',
       long_description=open('pypi-readme.rst').read(),
       license='MIT',
-      keywords="file system, zip, archive, fil, directory",
+      keywords="file system, zip, archive, file, directory",
       packages=find_packages(exclude='docs'))
