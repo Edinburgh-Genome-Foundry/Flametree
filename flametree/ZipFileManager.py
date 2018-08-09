@@ -95,7 +95,7 @@ class ZipFileManager:
             result = self.files_data[path].getvalue()
         else:
             result = self.reader.read(path)
-        if mode == "r":
+        if (mode == "r") and hasattr(result, 'decode'):
             result = result.decode('utf8')
         return result
 
