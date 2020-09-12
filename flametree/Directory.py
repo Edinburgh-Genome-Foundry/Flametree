@@ -2,11 +2,14 @@ import os
 import re
 
 non_alphanum_regexpr = re.compile(r"[^a-zA-Z\d]")
+
+
 def sanitize_name(name):
     """Return the name with all non-alphanumerics replaced by '_'. """
     if name[0] in "0123456789":
         name = "_" + name
     return re.sub(non_alphanum_regexpr, "_", name)
+
 
 class FileTreeElement:
     """Base class for Directories and Files."""
@@ -56,6 +59,7 @@ class Directory(FileTreeElement):
     ``._all_files``
 
     """
+
     _is_dir = True
 
     def _dir(self, name, replace=True):
@@ -69,8 +73,7 @@ class Directory(FileTreeElement):
                 self[name]._delete()
             else:
                 return self[name]
-        subdir = Directory(location=self, name=name,
-                           file_manager=self._file_manager)
+        subdir = Directory(location=self, name=name, file_manager=self._file_manager)
         # From here we create
         self._file_manager.create(subdir, replace=replace)
         self._dirs.append(subdir)
@@ -105,8 +108,6 @@ class Directory(FileTreeElement):
         """Return the list of names of all subdirectories (not nested)"""
         return [subdir._name for subdir in self._dirs]
 
-
-
     @property
     def _all_files(self):
         """Return a list of all file objects in that tree."""
@@ -119,9 +120,9 @@ class Directory(FileTreeElement):
         space = indent_size * indent_level * " "
         for subdir in sorted(self._dirs, key=lambda subdir: subdir._name):
             lines.append("%s%s/" % (space, subdir._name))
-            lines += subdir._tree_view(indent_size=indent_size,
-                                       indent_level=indent_level + 1,
-                                       as_lines=True)
+            lines += subdir._tree_view(
+                indent_size=indent_size, indent_level=indent_level + 1, as_lines=True
+            )
         for f in sorted(self._files, key=lambda f: f._name):
             lines.append("%s%s" % (space, f._name))
 
@@ -136,8 +137,7 @@ class Directory(FileTreeElement):
 
         """
         # TODO: That's not the most memory-efficient way: better file-by-file
-        self._copy(directory, replace_dirs=replace_dirs,
-                   replace_files=replace_files)
+        self._copy(directory, replace_dirs=replace_dirs, replace_files=replace_files)
         self._delete()
 
     def _copy(self, directory, replace_dirs=True, replace_files=True):
@@ -154,8 +154,7 @@ class Directory(FileTreeElement):
         for subdir in self._dirs:
             # print ("subdir", subdir)
             # new_target = target._dir(subdir._name, replace=replace_dirs)
-            subdir._copy(target, replace_dirs=replace_dirs,
-                         replace_files=replace_files)
+            subdir._copy(target, replace_dirs=replace_dirs, replace_files=replace_files)
 
     def _delete(self):
         """Delete this folder or file"""
@@ -165,11 +164,13 @@ class Directory(FileTreeElement):
         location = self._location
         location._dict.pop(self._name)
         location.__dict__.pop(self._name, None)
-        location._dirs = [subdir for subdir in location._dirs
-                          if subdir._name != self._name]
+        location._dirs = [
+            subdir for subdir in location._dirs if subdir._name != self._name
+        ]
 
     def __getitem__(self, it):
-            return self._dict[it]
+        return self._dict[it]
+
 
 class File(FileTreeElement):
     _is_dir = False
@@ -182,12 +183,12 @@ class File(FileTreeElement):
     def write(self, content, mode="a"):
         """Write data in the file."""
         if hasattr(content, "decode") and not mode.endswith("b"):
-            mode += "b" # You'll thank me for this. Unless it breaks something.
+            mode += "b"  # You'll thank me for this. Unless it breaks something.
         self._file_manager.write(self, content, mode=mode)
 
     def print_content(self):
         """Print the file's content."""
-        print (self.read())
+        print(self.read())
 
     def move(self, target, replace=True):
         """Move this file to the specified target (a directory or a file)

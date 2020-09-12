@@ -14,7 +14,6 @@ class DiskFileManager:
       or simply appended to ?
     """
 
-
     def __init__(self, target, replace=False):
         self.target = target
         if replace and os.path.exists(target):
@@ -22,25 +21,26 @@ class DiskFileManager:
         if not os.path.exists(target):
             os.makedirs(target)
 
-
     @staticmethod
-    def list_directory_content(directory, element_type='file'):
+    def list_directory_content(directory, element_type="file"):
         """Return the list of all file or dir objects in the directory."""
-        filtr = os.path.isfile if (element_type == 'file') else os.path.isdir
+        filtr = os.path.isfile if (element_type == "file") else os.path.isdir
         path = directory._path
-        return [] if not os.path.exists(path) else [
-            name for name in os.listdir(path)
-            if filtr(os.path.join(path, name))
-        ]
+        return (
+            []
+            if not os.path.exists(path)
+            else [name for name in os.listdir(path) if filtr(os.path.join(path, name))]
+        )
 
     @classmethod
     def list_files(cls, directory):
         """Return the list of all file objects in the directory."""
-        return cls.list_directory_content(directory, element_type='file')
+        return cls.list_directory_content(directory, element_type="file")
+
     @classmethod
     def list_dirs(cls, directory):
         """Return the list of all directory objects in the directory."""
-        return cls.list_directory_content(directory, element_type='dirs')
+        return cls.list_directory_content(directory, element_type="dirs")
 
     @staticmethod
     def read(fileobject, mode="r"):
