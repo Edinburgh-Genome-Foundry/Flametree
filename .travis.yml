@@ -3,7 +3,8 @@ python:
   - "3.6"
 # command to install dependencies
 install:
-  - pip install coveralls pytest-cov pytest
+  - pip install --upgrade pip
+  - pip install --upgrade pytest coveralls pytest-cov
   - pip install matplotlib pandas weasyprint
   - pip install -e .
 # command to run tests
