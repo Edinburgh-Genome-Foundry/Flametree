@@ -6,9 +6,13 @@ from .DiskFileManager import DiskFileManager
 from .Directory import Directory
 
 import string
+
 printable = set(string.printable) - set("\x0b\x0c")
+
+
 def is_hex(s):
     return any(c not in printable for c in s)
+
 
 def file_tree(target, replace=False):
     """Open a connection to a file tree which can be either a disk folder, a
@@ -28,12 +32,11 @@ def file_tree(target, replace=False):
     """
     if isinstance(target, Directory):
         return target
-    if ((not isinstance(target, str)) or is_hex(target)):
+    if (not isinstance(target, str)) or is_hex(target):
         return Directory(file_manager=ZipFileManager(source=target))
-    elif target == '@memory':
+    elif target == "@memory":
         return Directory("@memory", file_manager=ZipFileManager("@memory"))
     elif target.lower().endswith(".zip"):
-        return Directory(target, file_manager=ZipFileManager(target,
-                                                             replace=replace))
+        return Directory(target, file_manager=ZipFileManager(target, replace=replace))
     else:
         return Directory(target, file_manager=DiskFileManager(target))
