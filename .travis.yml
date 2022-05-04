@@ -1,11 +1,11 @@
 language: python
 python:
-  - "3.6"
+  - "3.9"
 # command to install dependencies
 install:
   - pip install --upgrade pip
   - pip install --upgrade pytest coveralls pytest-cov
-  - pip install matplotlib pandas weasyprint
+  - pip install matplotlib pandas weasyprint==51
   - pip install -e .
 # command to run tests
 script:

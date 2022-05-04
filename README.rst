@@ -1,7 +1,7 @@
 .. raw:: html
 
     <p align="center">
-    <img alt="DNA Cauldron Logo" title="DNA Cauldron Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png" width="500">
+    <img alt="Flametree Logo" title="Flametree Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png" width="500">
     </p>
     <h2 align="center"> Python file operations made easy </h2>
 
@@ -73,33 +73,33 @@ operations is the same:
 See section *Usage* below for more examples and features.
 
 Installation
--------------
+------------
 
 Flametree should work on Windows/Max/Linux, with Python 2 and 3, and has no external dependency.
 
 It can be installed by unzipping the source code in one directory and using this command: ::
 
-    sudo python setup.py install
+    python setup.py install
 
 You can also install it directly from the Python Package Index with this command: ::
 
-    sudo pip install flametree
+    pip install flametree
 
 
 Contribute
------------
+----------
 
 Flametree is an open-source software originally written by Zulko_ and released on Github_
 under the MIT licence (Copyright Edinburgh Genome Foundry).
-Everyone is welcome to contribute !
+Everyone is welcome to contribute!
 In particular if you have ideas of new kinds of file systems to add to Flametree.
 
 
 Usage
--------
+-----
 
 Opening a file tree
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Here is how you open different kinds of file systems:
 
@@ -203,7 +203,7 @@ The snippet below prints the content of all ``.txt`` files in the file tree:
             f.print_content()
 
 Creating files and folders
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To create a new subdirectory use ``_dir``:
 
@@ -238,14 +238,14 @@ write to file ``data/test_1/values.csv``, all in a single line:
 
 .. code:: python
 
-    root._dir("data")._dir("test_1")._file("values.csv").write("1, 15, 25")
+    root._dir("data")._dir("test_1")._file("values.csv").write("1,15,25")
 
 Beware that ``._dir`` and ``._file`` **overwrite their target by default**, which means that if you write:
 
 .. code:: python
 
-    root._dir("data")._file("values_1.csv").write("1, 4, 7")
-    root._dir("data")._file("values_2.csv").write("2, 9, 7")
+    root._dir("data")._file("values_1.csv").write("1,4,7")
+    root._dir("data")._file("values_2.csv").write("2,9,7")
 
 The directory ``data`` will only contain ``values_2.csv``, because the second
 line's ``_dir("data")`` erases the ``data`` directory and starts a new one. To avoid this,
@@ -253,19 +253,19 @@ either use ``root.data`` in the second line:
 
 .. code:: python
 
-    root._dir("data")._file("values_1.csv").write("1, 4, 7")
-    root.data._file("values_2.csv").write("2, 9, 7")
+    root._dir("data")._file("values_1.csv").write("1,4,7")
+    root.data._file("values_2.csv").write("2,9,7")
 
 Or use ``replace=False`` in ``_dir``:
 
 .. code:: python
 
-    root._dir("data")._file("values_1.csv").write("1, 4, 7")
-    root._dir("data", replace=False)._file("values_2.csv").write("2, 9, 7")
+    root._dir("data")._file("values_1.csv").write("1,4,7")
+    root._dir("data", replace=False)._file("values_2.csv").write("2,9,7")
 
 
 Other operations
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 You can move, copy, and delete a file with ``.move(folder)``, ``.copy(folder)``,
 ``.delete()``, and a directory with ``._move(folder)``, ``._copy(folder)``,
@@ -311,7 +311,7 @@ Here are a few examples:
 
 
 Using file writers from other libraries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some libraries have file-generating methods which expect a file name or a file
 object to write too.

@@ -9,9 +9,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-import weasyprint
+import weasyprint  # use version 51 for Ubuntu 18
 import pandas
-
 
 PYTHON3 = sys.version_info[0] == 3
 
