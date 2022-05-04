@@ -16,6 +16,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pytest pytest-cov coveralls
+          pip install matplotlib pandas weasyprint==51
       - name: Install
         run: |
           pip install -e .
