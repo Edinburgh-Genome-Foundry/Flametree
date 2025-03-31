@@ -70,8 +70,8 @@ Infos
 
   pip install flametree
 
-**Github Page**
+**Github Page:** `<https://github.com/Edinburgh-Genome-Foundry/Flametree>`_
 
-`<https://github.com/Edinburgh-Genome-Foundry/Flametree>`_
+**License:** MIT
 
-**License:** MIT, Copyright Edinburgh Genome Foundry
+Copyright 2017 Edinburgh Genome Foundry, University of Edinburgh
