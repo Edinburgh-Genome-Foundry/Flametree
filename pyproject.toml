@@ -1,0 +1,21 @@
+[project]
+name = "flametree"
+version = "0.1.12"
+license = "MIT"
+authors = [{ name = "Zulko" }]
+description = "Python file and zip operations made easy"
+readme = "pypi-readme.rst"
+keywords = ["file system", "zip", "archive", "file", "directory"]
+
+[project.urls]
+Homepage = "https://github.com/Edinburgh-Genome-Foundry/Flametree"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["docs"]
