@@ -9,7 +9,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
-import weasyprint  # use version 51 for Ubuntu 18
+import weasyprint
 import pandas
 
 PYTHON3 = sys.version_info[0] == 3
@@ -22,7 +22,7 @@ def test_weasyprint(tmpdir):
     html.write_pdf(root._dir("pdfs")._file("test.pdf"))
     with open(os.path.join(path, "pdfs", "test.pdf"), "rb") as f:
         filesize = len(f.read())
-        assert 8000 < filesize
+        assert 4000 < filesize
 
 
 def test_matplotlib(tmpdir):
