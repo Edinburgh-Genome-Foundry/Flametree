@@ -1,6 +1,6 @@
 [project]
 name = "flametree"
-version = "0.1.12"
+version = "0.2.0"
 license = "MIT"
 authors = [{ name = "Zulko" }]
 description = "Python file and zip operations made easy"
