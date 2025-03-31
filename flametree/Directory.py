@@ -5,7 +5,7 @@ non_alphanum_regexpr = re.compile(r"[^a-zA-Z\d]")
 
 
 def sanitize_name(name):
-    """Return the name with all non-alphanumerics replaced by '_'. """
+    """Return the name with all non-alphanumerics replaced by '_'."""
     if name[0] in "0123456789":
         name = "_" + name
     return re.sub(non_alphanum_regexpr, "_", name)
@@ -114,8 +114,7 @@ class Directory(FileTreeElement):
         return self._files + sum([d._all_files for d in self._dirs], [])
 
     def _tree_view(self, indent_size=2, indent_level=0, as_lines=False):
-        """Return a string representation of the tree for pretty printing.
-        """
+        """Return a string representation of the tree for pretty printing."""
         lines = []
         space = indent_size * indent_level * " "
         for subdir in sorted(self._dirs, key=lambda subdir: subdir._name):
@@ -176,8 +175,7 @@ class File(FileTreeElement):
     _is_dir = False
 
     def read(self, mode="r", **kw):
-        """Return the file's content as a string (mode 'r') or bytes ('rb').
-        """
+        """Return the file's content as a string (mode 'r') or bytes ('rb')."""
         return self._file_manager.read(self, mode=mode)
 
     def write(self, content, mode="a"):
@@ -191,8 +189,7 @@ class File(FileTreeElement):
         print(self.read())
 
     def move(self, target, replace=True):
-        """Move this file to the specified target (a directory or a file)
-        """
+        """Move this file to the specified target (a directory or a file)"""
         self.copy(target, replace=replace)
         self.delete()
 
