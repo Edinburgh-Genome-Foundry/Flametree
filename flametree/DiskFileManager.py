@@ -5,13 +5,13 @@ import shutil
 class DiskFileManager:
     """Reader and Writer for disk files.
 
-
-    target
-      A directory on the disk. If it doesn't exist, it will be created.
-
-    replace
-      If the ``target`` directory exists, should it be completely replaced
-      or simply appended to ?
+    Parameters
+    ----------
+    target : str
+        A directory on the disk. If it doesn't exist, it will be created.
+    replace : bool
+        If the `target` directory exists, should it be completely replaced or
+        simply appended to?
     """
 
     def __init__(self, target, replace=False):

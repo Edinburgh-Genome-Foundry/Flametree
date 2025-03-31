@@ -21,21 +21,18 @@ EMPTY_ZIP_BYTES = b"PK\x05\x06" + 18 * b"\x00"
 
 
 class ZipFileManager:
-    """Reader and Writer of Zip files.
+    """Reader and Writer of ZIP files.
 
     Parameters
     ----------
-
-    path
-      Path to a zip archive to be read or written to.
-
-    source
-      Either a string/byte representing zipped data, or a file-like object
-      connected to zipped data.
-
-    replace
-      In case the provided ``path`` is pointing to an already-existing file,
-      should it be erased or appended to ?
+    path : str
+        Path to a zip archive to be read or written to.
+    source : str or bytes or file-like object
+        Either a string/bytes representing zipped data, or a file-like object
+        connected to zipped data.
+    replace : bool
+        In case the provided `path` is pointing to an already-existing file,
+        should it be erased or appended to?
     """
 
     # The Zipfile manager manages at the same time files already in the zip

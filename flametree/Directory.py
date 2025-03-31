@@ -57,7 +57,6 @@ class Directory(FileTreeElement):
 
     You can also access all files in the directory's subtree with
     ``._all_files``
-
     """
 
     _is_dir = True
@@ -133,7 +132,6 @@ class Directory(FileTreeElement):
         If ``replace_dirs`` is True, existing directories will be erased or
         overwritten. If ``replace_files`` is True, existing files will be
         overwritten.
-
         """
         # TODO: That's not the most memory-efficient way: better file-by-file
         self._copy(directory, replace_dirs=replace_dirs, replace_files=replace_files)
@@ -145,7 +143,6 @@ class Directory(FileTreeElement):
         If ``replace_dirs`` is True, existing directories will be erased or
         overwritten. If ``replace_files`` is True, existing files will be
         overwritten.
-
         """
         target = directory._dir(self._name, replace=replace_dirs)
         for f in self._files:
