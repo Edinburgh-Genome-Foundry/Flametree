@@ -1,7 +1,7 @@
 .. raw:: html
 
     <p align="center">
-    <img alt="Flametree Logo" title="Flametree Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/logo.png" width="500">
+    <img alt="Flametree Logo" title="Flametree Logo" src="https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/images/logo.png" width="500">
     </p>
     <h2 align="center"> Python file operations made easy </h2>
 
@@ -171,7 +171,7 @@ This syntactic sugar is particularly useful to explore a file tree in
 IPython Notebooks or other editors offering auto-completion:
 
 
-.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/docs/autocomplete.png
+.. image:: https://raw.githubusercontent.com/Edinburgh-Genome-Foundry/Flametree/master/images/autocomplete.png
    :alt: [illustration]
    :align: center
 
