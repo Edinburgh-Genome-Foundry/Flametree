@@ -40,7 +40,7 @@ class ZipFileManager:
     # The uncompressed files in memory are flushed into the archive upon
     # closing of the manager, with the ``.close`` method.
 
-    def __init__(self, path=None, source=None, replace=False):
+    def __init__(self, path=None, source=None, replace=False, metadata_encoding=None):
         self.path = "." if path is None else path
         if path == "@memory":  # VIRTUAL ZIP FROM SCRATCH
             self.source = StringBytesIO()
@@ -56,7 +56,8 @@ class ZipFileManager:
             self.writer = zipfile.ZipFile(
                 self.source, "a", compression=zipfile.ZIP_DEFLATED
             )
-            self.reader = zipfile.ZipFile(self.source, "r")
+            self.reader = zipfile.ZipFile(self.source, "r",
+                metadata_encoding=metadata_encoding)
         else:  # VIRTUAL ZIP FROM EXISTING DATA
             self.source = source
             if isinstance(self.source, (str, bytes)):
@@ -64,7 +65,8 @@ class ZipFileManager:
             self.writer = zipfile.ZipFile(
                 self.source, "a", compression=zipfile.ZIP_DEFLATED
             )
-            self.reader = zipfile.ZipFile(self.source, "r")
+            self.reader = zipfile.ZipFile(self.source, "r",
+                metadata_encoding=metadata_encoding)
         self.files_data = defaultdict(lambda *a: StringBytesIO())
 
     def relative_path(self, target):
